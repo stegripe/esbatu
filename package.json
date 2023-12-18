@@ -1,0 +1,42 @@
+{
+    "name": "template",
+    "version": "1.0.0",
+    "description": "A template to generate well-configured project base for Stegripe.",
+    "main": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "npm run lint && npm run compile",
+        "compile": "tsc --build tsconfig.json",
+        "lint": "eslint . --ignore-path .gitignore --ext .ts",
+        "lint:fix": "npm run lint -- --fix",
+        "start": "node --es-module-specifier-resolution=node .",
+        "start:dev": "rimraf ./dist && npm run compile && npm start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/stegripe/template.git"
+    },
+    "author": "Stegripe <admin@stegripe.org>",
+    "license": "AGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/stegripe/template/issues"
+    },
+    "homepage": "https://github.com/stegripe/template#readme",
+    "engines": {
+        "node": ">=16.6.0",
+        "npm": ">=7.0.0"
+    },
+    "eslintConfig": {
+        "extends": "@clytage/eslint-config/typescript",
+        "ignorePatterns": "dist/*"
+    },
+    "devDependencies": {
+        "@clytage/eslint-config": "^3.0.1",
+        "@types/node": "^20.9.3",
+        "@typescript-eslint/eslint-plugin": "^6.12.0",
+        "@typescript-eslint/parser": "^6.12.0",
+        "eslint": "^8.54.0",
+        "rimraf": "^5.0.5",
+        "typescript": "^5.3.2"
+    }
+}
