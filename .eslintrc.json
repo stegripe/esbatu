@@ -1,0 +1,36 @@
+{
+	"root": true,
+	"extends": ["@clytage/eslint-config/typescript", "prettier"],
+	"plugins": ["prettier"],
+	"parserOptions": {
+		"project": "./tsconfig.json"
+	},
+	"rules": {
+		"@typescript-eslint/naming-convention": [
+			"error",
+			{
+				"selector": "default",
+				"format": ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
+				"leadingUnderscore": "allow",
+				"trailingUnderscore": "forbid"
+			},
+			{
+				"selector": "variable",
+				"modifiers": ["destructured"],
+				"format": null
+			}
+		],
+		"prettier/prettier": [
+			"error",
+			{
+				"useTabs": true,
+				"endOfLine": "lf",
+				"trailingComma": "none",
+				"arrowParens": "avoid",
+				"printWidth": 120,
+				"quoteProps": "as-needed"
+			}
+		]
+	},
+	"ignorePatterns": ["dist"]
+}
