@@ -1,4 +1,6 @@
 {
-    "files.eol": "\n",
-    "typescript.tsdk": "node_modules/typescript/lib"
+	"files.eol": "\n",
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode"
 }
