@@ -87,11 +87,6 @@ export class Node {
 	 * @readonly
 	 */
 	public readonly name;
-	/**
-	 * Websocket version this node will use.
-	 * @readonly
-	 */
-	public readonly version: string = "/v4";
 	/** The number of reconnects to Lavalink. */
 	public reconnects = 0;
 	/** The state of this connection. */
@@ -104,10 +99,11 @@ export class Node {
 	public sessionId: string | null = null;
 	/**
 	 * A URL of the Lavalink.
+	 * @protected
 	 * @readonly
 	 * @internal
 	 */
-	public readonly url;
+	protected readonly url;
 	/**
 	 * A credentials to access the Lavalink.
 	 * @protected
@@ -115,6 +111,13 @@ export class Node {
 	 * @internal
 	 */
 	protected readonly authorization;
+	/**
+	 * Websocket version this node will use.
+	 * @protected
+	 * @readonly
+	 * @internal
+	 */
+	protected readonly version: string = "/v4";
 	/**
 	 * Boolean that represents if the node has initialized once.
 	 * @private
@@ -144,11 +147,11 @@ export class Node {
 			manager: { enumerable: false, writable: false },
 			rest: { enumerable: true, writable: false },
 			name: { enumerable: true, writable: false },
+			url: { enumerable: true, writable: false },
+			authorization: { enumerable: false, writable: false },
 			version: { enumerable: true, writable: false },
 			initialized: { enumerable: false, writable: true },
-			destroyed: { enumerable: false, writable: true },
-			url: { enumerable: true, writable: false },
-			authorization: { enumerable: false, writable: false }
+			destroyed: { enumerable: false, writable: true }
 		});
 	}
 
