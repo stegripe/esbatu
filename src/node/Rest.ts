@@ -130,15 +130,11 @@ export interface UpdatePlayerInfo {
 }
 
 export interface UpdatePlayerOptions {
-	track?:
-		| {
-				encoded?: string | null;
-		  }
-		| undefined;
-	position?: number | undefined;
-	endTime?: number | undefined;
-	volume?: number | undefined;
-	paused?: boolean | undefined;
+	track?: { encoded?: string | null };
+	position?: number;
+	endTime?: number;
+	volume?: number;
+	paused?: boolean;
 	filters?: FilterOptions;
 	voice?: LavalinkPlayerVoiceState;
 }
