@@ -9,9 +9,9 @@ import { Rest } from "./node/Rest";
 import { name as packageName, version as packageVersion } from "../package.json";
 
 export interface VoiceChannelOptions {
-	/** A id of Guild in which the ChannelId of the voice channel is located. */
+	/** A id of Guild in which the {@link channelId} of the voice channel is located. */
 	guildId: string;
-	/** A id of shard to track where this should send on sharded websockets, put 0 if you are unsharded. */
+	/** A id of Shard to track where this should send on sharded websockets, put 0 if you are unsharded. */
 	shardId: number;
 	/** A id of the voice channel you want to connect to. */
 	channelId: string;
@@ -35,7 +35,7 @@ export interface NodeOption {
 export interface IcelinkOptions {
 	/** Whether to move players to a different Lavalink node when a node disconnect. */
 	moveOnDisconnect?: boolean;
-	/** The Node options, for all the nodes. */
+	/** The {@link Node} options, for all the nodes. */
 	nodes: NodeOption[];
 	/** Timeout before trying to reconnect. */
 	reconnectInterval?: number;
@@ -62,9 +62,9 @@ export interface IcelinkOptions {
 type Constructor<T> = new (...args: any[]) => T;
 
 export interface Structures {
-	/** A custom structure that extends the Rest class. */
+	/** A custom structure that extends the {@link Rest} class. */
 	rest?: Constructor<Rest>;
-	/** A custom structure that extends the Player class. */
+	/** A custom structure that extends the {@link Player} class. */
 	player?: Constructor<Player>;
 }
 
