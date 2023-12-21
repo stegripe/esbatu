@@ -102,7 +102,7 @@ export interface RoutePlanner {
 
 export interface LavalinkPlayer {
 	guildId: string;
-	track?: Track;
+	track: Track | null;
 	volume: number;
 	paused: boolean;
 	state: LavalinkPlayerState;
