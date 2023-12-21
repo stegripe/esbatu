@@ -232,10 +232,11 @@ export class Rest {
 		this.authorization = options.authorization;
 
 		Object.defineProperties(this, {
-			node: { enumerable: false, writable: false },
-			version: { enumerable: false, writable: false },
+			decode: { enumerable: false, writable: false },
+			node: { enumerable: true, writable: false },
 			url: { enumerable: false, writable: false },
-			authorization: { enumerable: false, writable: false }
+			authorization: { enumerable: false, writable: false },
+			version: { enumerable: false, writable: false }
 		});
 	}
 
