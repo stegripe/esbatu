@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging, max-lines */
 import { EventEmitter } from "node:events";
-import { Node } from "../node";
+import { Node } from "../node/index";
 import { VoiceConnection } from "./VoiceConnection";
-import { OpCodes, State } from "../Constants.js";
-import { Exception, Track } from "../node/Rest.js";
+import { OpCodes, State } from "../Constants";
+import { Exception, Track } from "../node/Rest";
 
 export type TrackEndReason = "cleanup" | "finished" | "loadFailed" | "replaced" | "stopped";
 export type PlayerEventType =

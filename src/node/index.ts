@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/naming-convention, no-case-declarations, max-lines */
 import { IncomingMessage } from "http";
-import { NodeOption, Icelink, VoiceChannelOptions } from "..";
-import { OpCodes, State, VoiceState } from "../Constants.js";
+import { NodeOption, Icelink, VoiceChannelOptions } from "../Icelink";
+import { OpCodes, State, VoiceState, RedisKey } from "../Constants";
 import { Rest } from "./Rest";
 import Websocket from "ws";
 import { Player } from "../guild/Player";
-import { RedisKey } from "../Constants";
 import { VoiceConnection } from "../guild/VoiceConnection";
 
 export interface NodeStats {
@@ -131,7 +130,7 @@ export class Node {
 
 	/**
 	 * Creates a new Node instance for {@link Icelink}.
-	 * @param manager A {@link Icelink} instance
+	 * @param manager A {@link Icelink} instance.
 	 * @param options Options on creating this node.
 	 */
 	public constructor(manager: Icelink, options: NodeOption) {

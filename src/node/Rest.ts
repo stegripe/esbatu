@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Node, NodeInfo, NodeStats } from ".";
-import { NodeOption } from "..";
+import { Node, NodeInfo, NodeStats } from "./index";
+import { NodeOption } from "../Icelink";
 import { FilterOptions } from "../guild/Player";
 import { fetch } from "undici";
 

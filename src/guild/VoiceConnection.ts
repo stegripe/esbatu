@@ -1,6 +1,6 @@
 import { EventEmitter, once } from "events";
-import { State, VoiceState } from "../Constants.js";
-import { Icelink, VoiceChannelOptions } from "..";
+import { State, VoiceState } from "../Constants";
+import { Icelink, VoiceChannelOptions } from "../Icelink";
 
 export interface StateUpdatePartial {
 	channel_id?: string;
