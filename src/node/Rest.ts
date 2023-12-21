@@ -22,9 +22,9 @@ export interface Track {
 		isStream: boolean;
 		position: number;
 		title: string;
-		uri?: string;
-		artworkUrl?: string;
-		isrc?: string;
+		uri: string | null;
+		artworkUrl: string | null;
+		isrc: string | null;
 		sourceName: string;
 	};
 	pluginInfo: object;
