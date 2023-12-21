@@ -303,8 +303,6 @@ export class Player extends EventEmitter {
 		});
 
 		this.volume = player.volume;
-
-		return undefined;
 	}
 
 	/**
@@ -327,7 +325,7 @@ export class Player extends EventEmitter {
 	 * Change the karaoke settings applied to to the Player State.
 	 * @param karaoke An object that conforms to the KaraokeSettings type that defines a range of frequencies to mute.
 	 */
-	public setKaraoke(karaoke: KaraokeSettings | null = null): Promise<void> {
+	public setKaraoke(karaoke: KaraokeSettings): Promise<void> {
 		return this.setFilters({ karaoke });
 	}
 
@@ -335,7 +333,7 @@ export class Player extends EventEmitter {
 	 * Change the timescale settings applied to to the Player State.
 	 * @param timescale An object that conforms to the TimescaleSettings type that defines the time signature to play the audio at.
 	 */
-	public setTimescale(timescale: TimescaleSettings | null = null): Promise<void> {
+	public setTimescale(timescale: TimescaleSettings): Promise<void> {
 		return this.setFilters({ timescale });
 	}
 
@@ -343,7 +341,7 @@ export class Player extends EventEmitter {
 	 * Change the tremolo settings applied to to the Player State.
 	 * @param tremolo An object that conforms to the FreqSettings type that defines an oscillation in volume.
 	 */
-	public setTremolo(tremolo: FreqSettings | null = null): Promise<void> {
+	public setTremolo(tremolo: FreqSettings): Promise<void> {
 		return this.setFilters({ tremolo });
 	}
 
@@ -351,7 +349,7 @@ export class Player extends EventEmitter {
 	 * Change the vibrato settings applied to to the Player State.
 	 * @param vibrato An object that conforms to the FreqSettings type that defines an oscillation in pitch.
 	 */
-	public setVibrato(vibrato: FreqSettings | null = null): Promise<void> {
+	public setVibrato(vibrato: FreqSettings): Promise<void> {
 		return this.setFilters({ vibrato });
 	}
 
@@ -359,7 +357,7 @@ export class Player extends EventEmitter {
 	 * Change the rotation settings applied to the Player State.
 	 * @param rotation An object that conforms to the RotationSettings type that defines the frequency of audio rotating round the listener.
 	 */
-	public setRotation(rotation: RotationSettings | null = null): Promise<void> {
+	public setRotation(rotation: RotationSettings): Promise<void> {
 		return this.setFilters({ rotation });
 	}
 
@@ -367,7 +365,7 @@ export class Player extends EventEmitter {
 	 * Change the distortion settings applied to the Player State.
 	 * @param distortion An object that conforms to DistortionSettings that defines distortions in the audio.
 	 */
-	public setDistortion(distortion: DistortionSettings | null = null): Promise<void> {
+	public setDistortion(distortion: DistortionSettings): Promise<void> {
 		return this.setFilters({ distortion });
 	}
 
@@ -375,7 +373,7 @@ export class Player extends EventEmitter {
 	 * Change the channel mix settings applied to the Player State.
 	 * @param channelMix An object that conforms to ChannelMixSettings that defines how much the left and right channels affect each other. (setting all factors to 0.5 causes both channels to get the same audio)
 	 */
-	public setChannelMix(channelMix: ChannelMixSettings | null = null): Promise<void> {
+	public setChannelMix(channelMix: ChannelMixSettings): Promise<void> {
 		return this.setFilters({ channelMix });
 	}
 
@@ -383,7 +381,7 @@ export class Player extends EventEmitter {
 	 * Change the low pass settings applied to the Player State.
 	 * @param lowPass An object that conforms to LowPassSettings that defines the amount of suppression on higher frequencies.
 	 */
-	public setLowPass(lowPass: LowPassSettings | null = null): Promise<void> {
+	public setLowPass(lowPass: LowPassSettings): Promise<void> {
 		return this.setFilters({ lowPass });
 	}
 
@@ -479,8 +477,6 @@ export class Player extends EventEmitter {
 		this.paused = player.paused;
 		this.filters = player.filters;
 		this._encodedTrack = player.track?.encoded ?? null;
-
-		return undefined;
 	}
 
 	/**
@@ -494,8 +490,6 @@ export class Player extends EventEmitter {
 		this.ping = ping;
 
 		this.emit("update", data);
-
-		return undefined;
 	}
 
 	/**
