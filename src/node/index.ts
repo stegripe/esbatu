@@ -45,8 +45,8 @@ export interface NodeInfoVersion {
 	major: number;
 	minor: number;
 	patch: number;
-	preRelease?: string;
-	build?: string;
+	preRelease: string | null;
+	build: string | null;
 }
 
 export interface NodeInfoGit {
