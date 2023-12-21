@@ -4,7 +4,7 @@
 		// Type Checking
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
-		"exactOptionalPropertyTypes": true,
+		"exactOptionalPropertyTypes": false,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
@@ -20,6 +20,8 @@
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"resolveJsonModule": true,
+		"resolvePackageJsonExports": true,
+		"resolvePackageJsonImports": true,
 
 		// Emit
 		"declaration": true,
@@ -42,7 +44,7 @@
 
 		// Interop Constraints
 		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
+		"esModuleInterop": false,
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true
 	},
