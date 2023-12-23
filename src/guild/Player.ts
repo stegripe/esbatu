@@ -201,9 +201,8 @@ export class Player extends EventEmitter {
 	public async movePlayer(name?: string): Promise<boolean> {
 		const node = this.node.manager.nodes.get(name!) ?? this.node.manager.idealNode;
 
-		if (!node && ![...this.node.manager.nodes.values()].some(({ state }) => state === State.Connected)) {
+		if (!node && ![...this.node.manager.nodes.values()].some(({ state }) => state === State.Connected))
 			throw new Error("No available nodes to move to");
-		}
 		if (!node || node.name === this.node.name || node.state !== State.Connected) return false;
 
 		let lastNode = this.node.manager.nodes.get(this.node.name);
@@ -245,7 +244,7 @@ export class Player extends EventEmitter {
 				position: playable.options?.startTime,
 				endTime: playable.options?.endTime
 			},
-			noReplace: playable.options?.noReplace ?? false
+			noReplace: playable.options?.noReplace
 		});
 
 		this.trackIdentifier = player.track?.info.identifier ?? null;
