@@ -138,6 +138,7 @@ export abstract class Icelink extends EventEmitter {
 			nodes: { enumerable: true, writable: false },
 			connections: { enumerable: true, writable: false },
 			players: { enumerable: true, writable: false },
+			redis: { enumerable: false, writable: false },
 			id: { enumerable: false, writable: true }
 		});
 	}
@@ -182,7 +183,7 @@ export abstract class Icelink extends EventEmitter {
 	 * Listen attaches the event listener to the library you are using.
 	 * @abstract
 	 */
-	public abstract listen(client: any): void;
+	public abstract listen(): void;
 
 	/**
 	 * sendPacket is where your library send packets to Discord Gateway.
