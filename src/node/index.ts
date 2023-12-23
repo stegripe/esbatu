@@ -190,9 +190,8 @@ export class Node {
 	/** Connect to the Lavalink Websocket. */
 	public async connect(): Promise<void> {
 		if (!this.manager.id) throw new Error("Don't connect a node when the library is not yet ready");
-		if (this.destroyed) {
+		if (this.destroyed)
 			throw new Error("You can't re-use the same instance of a node once disconnected, please re-add the node again");
-		}
 
 		this.state = State.Connecting;
 		this.sessionId = (await this.manager.redis?.get(RedisKey.NodeSession(this.name.toLowerCase()))) ?? null;
@@ -284,7 +283,13 @@ export class Node {
 			const IDataCache = await this.manager.redis?.get(RedisKey.NodePlayers(this.name.toLowerCase()));
 			const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
 
-			dataCache.push(options);
+			dataCache.push({
+				guildId: options.guildId,
+				channelId: options.channelId,
+				shardId: options.shardId,
+				deaf: options.deaf ?? true,
+				mute: options.mute ?? false
+			});
 
 			await this.manager.redis?.set(RedisKey.NodePlayers(this.name.toLowerCase()), JSON.stringify(dataCache));
 			this.manager.players.set(player.guildId, player);
@@ -349,17 +354,22 @@ export class Node {
 	 * @private
 	 * @internal
 	 */
-	private async message(message: unknown): Promise<void> {
-		if (this.destroyed) return undefined;
+	private async message(message: Websocket.RawData): Promise<void> {
+		if (Array.isArray(message)) message = Buffer.concat(message);
+		if (message instanceof ArrayBuffer) message = Buffer.from(message);
 
-		const data = JSON.parse(message as string);
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string
+		const data = JSON.parse(message.toString());
 
 		if (!data) return undefined;
+		if (this.destroyed) return undefined;
 
 		this.manager.emit("raw", this.name, data);
 
 		switch (data.op) {
 			case OpCodes.Stats:
+				delete data.op;
+
 				this.stats = data;
 
 				this.manager.emit("debug", `[WS => ${this.name}] Node status update, server load of ${this.penalties}`);
@@ -456,7 +466,7 @@ export class Node {
 	 */
 	private close(code: number, reason: Buffer): void {
 		this.manager.emit("debug", `[WS => ${this.name}] Connection Closed, Code: ${code || "Unknown Code"}`);
-		this.manager.emit("close", this.name, code, reason.toString("utf-8"));
+		this.manager.emit("close", this.name, code, reason.toString());
 
 		if (this.shouldClean) void this.clean();
 		else this.reconnect();
