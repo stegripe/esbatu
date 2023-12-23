@@ -125,24 +125,22 @@ export class VoiceConnection extends EventEmitter {
 		try {
 			const [status] = await once(this, "connectionUpdate", { signal: controller.signal });
 
-			if (status !== VoiceState.SessionReady) {
+			if (status !== VoiceState.SessionReady)
 				switch (status) {
 					case VoiceState.SessionIdMissing:
 						throw new Error("The voice connection is not established due to missing session id");
 					case VoiceState.SessionEndpointMissing:
 						throw new Error("The voice connection is not established due to missing connection endpoint");
 				}
-			}
 
 			this.state = State.Connected;
 		} catch (error: any) {
 			this.manager.emit("debug", `[VOICE => DISCORD] Request Connection Failed, Guild: ${this.guildId}`);
 
-			if ((error as Error).name === "AbortError") {
+			if ((error as Error).name === "AbortError")
 				throw new Error(
 					`The voice connection is not established in ${this.manager.options.voiceConnectionTimeout} seconds`
 				);
-			}
 
 			throw error;
 		} finally {
@@ -158,12 +156,11 @@ export class VoiceConnection extends EventEmitter {
 		this.lastChannelId = this.channelId?.repeat(1) ?? null;
 		this.channelId = channel_id ?? null;
 
-		if (this.channelId && this.lastChannelId !== this.channelId) {
+		if (this.channelId && this.lastChannelId !== this.channelId)
 			this.manager.emit(
 				"debug",
 				`[VOICE => DISCORD] Channel moved, old channel: ${this.lastChannelId}, new channel: ${this.channelId}, guild: ${this.guildId}`
 			);
-		}
 
 		if (!this.channelId) {
 			this.state = State.Disconnected;
@@ -200,12 +197,11 @@ export class VoiceConnection extends EventEmitter {
 		this.lastRegion = this.region?.repeat(1) ?? null;
 		this.region = data.endpoint.split(".").shift()?.replace(/[0-9]/g, "") ?? null;
 
-		if (this.region && this.lastRegion !== this.region) {
+		if (this.region && this.lastRegion !== this.region)
 			this.manager.emit(
 				"debug",
 				`[VOICE => DISCORD] Voice region changed, old region: ${this.lastRegion}, new region: ${this.region}, guild: ${this.guildId}`
 			);
-		}
 
 		this.serverUpdate = data;
 
