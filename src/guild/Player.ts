@@ -2,8 +2,9 @@
 import { EventEmitter } from "node:events";
 import { Node } from "../node/index";
 import { VoiceConnection } from "./VoiceConnection";
-import { OpCodes, State } from "../Constants";
+import { OpCodes, RedisKey, State } from "../Constants";
 import { Exception, Track } from "../node/Rest";
+import { VoiceChannelOptions } from "../Icelink";
 
 export type TrackEndReason = "cleanup" | "finished" | "loadFailed" | "replaced" | "stopped";
 export type PlayerEventType =
@@ -211,18 +212,54 @@ export class Player extends EventEmitter {
 
 		if (!lastNode || lastNode.state !== State.Connected) lastNode = this.node.manager.idealNode;
 
+		const ICurrentDataCache = await this.node.manager.redis?.get(RedisKey.NodePlayers(this.node.name.toLowerCase()));
+		const currentDataCache = ICurrentDataCache ? (JSON.parse(ICurrentDataCache) as VoiceChannelOptions[]) : [];
+
+		currentDataCache.splice(
+			currentDataCache.indexOf(currentDataCache.find(({ guildId: id }) => id === this.guildId)!),
+			1
+		);
+
 		await this.destroyPlayer();
+		await this.node.manager.redis?.set(
+			RedisKey.NodePlayers(this.node.name.toLowerCase()),
+			JSON.stringify(currentDataCache)
+		);
 
 		try {
 			this.node = node;
 
+			const IDataCache = await this.node.manager.redis?.get(RedisKey.NodePlayers(this.node.name.toLowerCase()));
+			const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
+
+			dataCache.push({
+				guildId: this.guildId,
+				channelId: this.connection.channelId!,
+				shardId: this.connection.shardId,
+				deaf: this.connection.deafened,
+				mute: this.connection.muted
+			});
+
 			await this.resumePlayer();
+			await this.node.manager.redis?.set(RedisKey.NodePlayers(this.node.name.toLowerCase()), JSON.stringify(dataCache));
 
 			return true;
 		} catch {
 			this.node = lastNode!;
 
+			const IDataCache = await this.node.manager.redis?.get(RedisKey.NodePlayers(this.node.name.toLowerCase()));
+			const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
+
+			dataCache.push({
+				guildId: this.guildId,
+				channelId: this.connection.channelId!,
+				shardId: this.connection.shardId,
+				deaf: this.connection.deafened,
+				mute: this.connection.muted
+			});
+
 			await this.resumePlayer();
+			await this.node.manager.redis?.set(RedisKey.NodePlayers(this.node.name.toLowerCase()), JSON.stringify(dataCache));
 
 			return false;
 		}
