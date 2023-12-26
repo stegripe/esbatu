@@ -3,8 +3,8 @@ import { State, VoiceState } from "../Constants";
 import { Icelink, VoiceChannelOptions } from "../Icelink";
 
 export interface StateUpdatePartial {
-	channel_id?: string;
 	session_id?: string;
+	channel_id: string | null;
 	self_deaf: boolean;
 	self_mute: boolean;
 }
@@ -153,7 +153,10 @@ export class VoiceConnection extends EventEmitter {
 	 */
 	public setStateUpdate({ session_id, channel_id, self_deaf, self_mute }: StateUpdatePartial): void {
 		this.lastChannelId = this.channelId?.repeat(1) ?? null;
-		this.channelId = channel_id ?? null;
+		this.channelId = channel_id;
+		this.deafened = self_deaf;
+		this.muted = self_mute;
+		this.sessionId = session_id ?? null;
 
 		if (this.channelId && this.lastChannelId !== this.channelId)
 			this.manager.emit(
@@ -165,11 +168,9 @@ export class VoiceConnection extends EventEmitter {
 			this.state = State.Disconnected;
 
 			this.manager.emit("debug", `[VOICE => DISCORD] Channel disconnected, guild: ${this.guildId}`);
-		}
 
-		this.deafened = self_deaf;
-		this.muted = self_mute;
-		this.sessionId = session_id ?? null;
+			return undefined;
+		}
 
 		this.manager.emit(
 			"debug",
@@ -195,14 +196,13 @@ export class VoiceConnection extends EventEmitter {
 
 		this.lastRegion = this.region?.repeat(1) ?? null;
 		this.region = data.endpoint.split(".").shift()?.replace(/[0-9]/g, "") ?? null;
+		this.serverUpdate = data;
 
 		if (this.region && this.lastRegion !== this.region)
 			this.manager.emit(
 				"debug",
 				`[VOICE => DISCORD] Voice region changed, old region: ${this.lastRegion}, new region: ${this.region}, guild: ${this.guildId}`
 			);
-
-		this.serverUpdate = data;
 
 		this.emit("connectionUpdate", VoiceState.SessionReady);
 		this.manager.emit("debug", `[VOICE => DISCORD] Server update received, guild: ${this.guildId}`);
