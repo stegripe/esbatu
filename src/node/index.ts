@@ -427,8 +427,8 @@ export class Node {
 								guildId,
 								channelId,
 								shardId,
-								mute: mute ?? false,
-								deaf: deaf ?? true
+								mute,
+								deaf
 							}).catch(() => undefined);
 
 							if (!player) {
