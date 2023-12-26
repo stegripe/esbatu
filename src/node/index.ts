@@ -283,15 +283,18 @@ export class Node {
 			const IDataCache = await this.manager.redis?.get(RedisKey.NodePlayers(this.name.toLowerCase()));
 			const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
 
-			dataCache.push({
-				guildId: options.guildId,
-				channelId: options.channelId,
-				shardId: options.shardId,
-				deaf: options.deaf ?? true,
-				mute: options.mute ?? false
-			});
+			if (dataCache.some(({ guildId }) => guildId !== options.guildId)) {
+				dataCache.push({
+					guildId: options.guildId,
+					channelId: options.channelId,
+					shardId: options.shardId,
+					deaf: options.deaf ?? true,
+					mute: options.mute ?? false
+				});
 
-			await this.manager.redis?.set(RedisKey.NodePlayers(this.name.toLowerCase()), JSON.stringify(dataCache));
+				await this.manager.redis?.set(RedisKey.NodePlayers(this.name.toLowerCase()), JSON.stringify(dataCache));
+			}
+
 			this.manager.players.set(player.guildId, player);
 
 			return player;
