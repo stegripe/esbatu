@@ -11,7 +11,6 @@ export interface StateUpdatePartial {
 
 export interface ServerUpdate {
 	token: string;
-	guild_id: string;
 	endpoint: string;
 }
 
