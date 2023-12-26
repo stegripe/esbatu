@@ -265,7 +265,7 @@ export class Node {
 			connection.on("connectionUpdate", async (state: VoiceState) => {
 				if (state !== VoiceState.SessionReady) return undefined;
 
-				const IDataCache = await this.manager.redis?.get(RedisKey.NodePlayers(this.name.toLowerCase()));
+				const IDataCache = await this.manager.redis?.get(RedisKey.NodePlayers(player.node.name.toLowerCase()));
 				const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
 				const dataIndex = dataCache.indexOf(dataCache.find(({ guildId }) => guildId === connection.guildId)!);
 
@@ -275,7 +275,7 @@ export class Node {
 				dataCache.at(dataIndex)!.deaf = connection.deafened;
 				dataCache.at(dataIndex)!.mute = connection.muted;
 
-				await this.manager.redis?.set(RedisKey.NodePlayers(this.name.toLowerCase()), JSON.stringify(dataCache));
+				await this.manager.redis?.set(RedisKey.NodePlayers(player.node.name.toLowerCase()), JSON.stringify(dataCache));
 
 				return player.sendServerUpdate(connection);
 			});
