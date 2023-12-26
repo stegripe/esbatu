@@ -117,7 +117,7 @@ export class VoiceConnection extends EventEmitter {
 		this.state = State.Connecting;
 
 		this.sendVoiceUpdate();
-		this.manager.emit("debug", `[VOICE => DISCORD] Requesting Connection, Guild: ${this.guildId}`);
+		this.manager.emit("debug", `[VOICE => DISCORD] Requesting connection, guild: ${this.guildId}`);
 
 		const controller = new AbortController();
 		const timeout = setTimeout(() => controller.abort(), this.manager.options.voiceConnectionTimeout * 1_000);
@@ -135,7 +135,7 @@ export class VoiceConnection extends EventEmitter {
 
 			this.state = State.Connected;
 		} catch (error: any) {
-			this.manager.emit("debug", `[VOICE => DISCORD] Request Connection Failed, Guild: ${this.guildId}`);
+			this.manager.emit("debug", `[VOICE => DISCORD] Request connection failure, guild: ${this.guildId}`);
 
 			if ((error as Error).name === "AbortError")
 				throw new Error(
@@ -174,7 +174,7 @@ export class VoiceConnection extends EventEmitter {
 
 		this.manager.emit(
 			"debug",
-			`[VOICE => DISCORD] State update received, channel: ${this.channelId}, session: ${session_id}, guild: ${this.guildId}`
+			`[VOICE => DISCORD] State update received, session: ${this.sessionId}, guild: ${this.guildId}`
 		);
 	}
 
@@ -206,10 +206,7 @@ export class VoiceConnection extends EventEmitter {
 		this.serverUpdate = data;
 
 		this.emit("connectionUpdate", VoiceState.SessionReady);
-		this.manager.emit(
-			"debug",
-			`[VOICE => DISCORD] Server update received, voice region: ${this.region}, guild: ${this.guildId}`
-		);
+		this.manager.emit("debug", `[VOICE => DISCORD] Server update received, guild: ${this.guildId}`);
 	}
 
 	/**
