@@ -510,8 +510,6 @@ export class Player extends EventEmitter {
 
 				break;
 			case "TrackEndEvent":
-				this._encodedTrack = null;
-
 				this.emit("end", data);
 
 				break;
