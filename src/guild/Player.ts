@@ -170,6 +170,7 @@ export class Player extends EventEmitter {
 	 * @internal
 	 */
 	private _encodedTrack: string | null = null;
+	private _prepareMove = false;
 
 	/**
 	 * Creates a new Player instance on {@link Node}.
@@ -184,7 +185,8 @@ export class Player extends EventEmitter {
 
 		Object.defineProperties(this, {
 			guildId: { enumerable: true, writable: false },
-			_encodedTrack: { enumerable: false, writable: true }
+			_encodedTrack: { enumerable: false, writable: true },
+			_prepareMove: { enumerable: false, writable: true }
 		});
 	}
 
@@ -204,11 +206,11 @@ export class Player extends EventEmitter {
 	public async movePlayer(name?: string): Promise<boolean> {
 		const node = this.node.manager.nodes.get(name!) ?? this.node.manager.idealNode;
 
-		if (!node && ![...this.node.manager.nodes.values()].some(({ state }) => state === State.Connected))
-			throw new Error("No available nodes to move to");
-		if (!node || node.name === this.node.name || node.state !== State.Connected) return false;
+		if (!node || node.name === this.node.name) return false;
+		if (node.state !== State.Connected) throw new Error("No available nodes to move to");
 
 		let lastNode = this.node.manager.nodes.get(this.node.name);
+		this._prepareMove = true;
 
 		if (!lastNode || lastNode.state !== State.Connected) lastNode = this.node.manager.idealNode;
 
@@ -243,6 +245,8 @@ export class Player extends EventEmitter {
 			await this.resumePlayer();
 			await this.node.manager.redis?.set(RedisKey.NodePlayers(this.node.name.toLowerCase()), JSON.stringify(dataCache));
 
+			this._prepareMove = false;
+
 			return true;
 		} catch {
 			this.node = lastNode!;
@@ -260,6 +264,8 @@ export class Player extends EventEmitter {
 
 			await this.resumePlayer();
 			await this.node.manager.redis?.set(RedisKey.NodePlayers(this.node.name.toLowerCase()), JSON.stringify(dataCache));
+
+			this._prepareMove = false;
 
 			return false;
 		}
@@ -523,6 +529,8 @@ export class Player extends EventEmitter {
 	 * @internal
 	 */
 	public onPlayerUpdate(data: { state: { position: number; ping: number; connected: boolean } }): void {
+		if (this._prepareMove) return undefined;
+
 		const { position, ping, connected } = data.state;
 
 		this.position = position;
@@ -538,6 +546,8 @@ export class Player extends EventEmitter {
 	 * @internal
 	 */
 	public onPlayerEvent(data: { type: string; track: Track }): void {
+		if (this._prepareMove) return undefined;
+
 		switch (data.type) {
 			case "TrackStartEvent":
 				this.trackIdentifier = data.track.info.identifier;
