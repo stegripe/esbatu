@@ -317,8 +317,14 @@ export class Node {
 			this.manager.connections.delete(guildId);
 		}
 		if (player) {
-			await player.destroyPlayer();
 			player.clean();
+
+			try {
+				await player.destroyPlayer();
+			} catch {
+				/* empty */
+			}
+
 			this.manager.players.delete(guildId);
 		}
 
