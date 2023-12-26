@@ -161,6 +161,8 @@ export class Player extends EventEmitter {
 	public position = 0;
 	/** An filters of the player. */
 	public filters: FilterOptions = {};
+	/** Whether Lavalink is connected to the voice gateway. */
+	public connected = false;
 	/**
 	 * A encoded of the currently playing track.
 	 * @private
@@ -475,6 +477,7 @@ export class Player extends EventEmitter {
 		this.volume = player.volume;
 		this.paused = player.paused;
 		this.filters = player.filters;
+		this.connected = player.state.connected;
 		this._encodedTrack = player.track?.encoded ?? null;
 	}
 
@@ -482,11 +485,12 @@ export class Player extends EventEmitter {
 	 * Handle player update data from Lavalink Websocket.
 	 * @internal
 	 */
-	public onPlayerUpdate(data: { state: { position: number; ping: number } }): void {
-		const { position, ping } = data.state;
+	public onPlayerUpdate(data: { state: { position: number; ping: number; connected: boolean } }): void {
+		const { position, ping, connected } = data.state;
 
 		this.position = position;
 		this.ping = ping;
+		this.connected = connected;
 
 		this.emit("update", data);
 	}
