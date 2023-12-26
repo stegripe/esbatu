@@ -421,7 +421,7 @@ export class Player extends EventEmitter {
 	 * @internal
 	 */
 	public async resumePlayer(): Promise<void> {
-		await this.node.rest.updatePlayer({
+		const { state } = await this.node.rest.updatePlayer({
 			guildId: this.guildId,
 			playerOptions: {
 				track: { encoded: this._encodedTrack },
@@ -437,7 +437,7 @@ export class Player extends EventEmitter {
 			}
 		});
 
-		this.connection.sendVoiceUpdate();
+		if (!state.connected) this.connection.sendVoiceUpdate();
 	}
 
 	/**
