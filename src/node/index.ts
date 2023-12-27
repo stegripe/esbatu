@@ -543,7 +543,7 @@ export class Node {
 
 		if (!this.manager.options.moveOnDisconnect) return this.destroy(count);
 
-		const players = [...this.manager.players.values()];
+		const players = [...this.manager.players.values()].filter(player => player.node.name === this.name);
 
 		try {
 			const data = await Promise.allSettled(players.map(player => player.movePlayer()));
