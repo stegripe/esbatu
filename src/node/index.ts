@@ -295,7 +295,7 @@ export class Node {
 			const IDataCache = await this.manager.redis?.get(RedisKey.NodePlayers(this.name.toLowerCase()));
 			const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
 
-			if (dataCache.some(({ guildId }) => guildId !== options.guildId)) {
+			if (!dataCache.some(({ guildId }) => guildId === options.guildId)) {
 				dataCache.push({
 					guildId: options.guildId,
 					channelId: options.channelId,
