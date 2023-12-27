@@ -350,7 +350,7 @@ export class Node {
 
 		this.manager.emit(
 			"debug",
-			`[WS => ${this.name}] Connection Handshake Done! ${this.url}, Upgrade Headers Resumed: ${resumed}`
+			`[WS => ${this.name}] Connection handshake done! ${this.url}, upgrade headers resumed: ${resumed}`
 		);
 
 		this.reconnects = 0;
