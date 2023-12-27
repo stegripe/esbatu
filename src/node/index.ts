@@ -383,7 +383,7 @@ export class Node {
 		const data = JSON.parse(message.toString());
 
 		if (!data) return undefined;
-		if (this.destroyed) return undefined;
+		if (this.destroyed || this.state === State.Reconnecting) return undefined;
 
 		this.manager.emit("raw", this.name, data);
 
@@ -434,24 +434,25 @@ export class Node {
 						await this.manager.redis?.set(RedisKey.NodeSession(this.name.toLowerCase()), this.sessionId!);
 						await this.rest.updateSession(this.manager.options.resume, this.manager.options.resumeTimeout);
 
-						const IDataCache = await this.manager.redis?.get(RedisKey.NodePlayers(this.name.toLowerCase()));
-						const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
+						if (data.resumed) {
+							const IDataCache = await this.manager.redis?.get(RedisKey.NodePlayers(this.name.toLowerCase()));
+							const dataCache = IDataCache ? (JSON.parse(IDataCache) as VoiceChannelOptions[]) : [];
 
-						for (const { guildId, channelId, shardId, mute, deaf } of dataCache) {
-							const player = await this.joinVoiceChannel({
-								guildId,
-								channelId,
-								shardId,
-								mute,
-								deaf
-							}).catch(() => undefined);
+							for (const { guildId, channelId, shardId, mute, deaf } of dataCache) {
+								const player = await this.joinVoiceChannel({
+									guildId,
+									channelId,
+									shardId,
+									mute,
+									deaf
+								}).catch(() => undefined);
 
-							if (!player) {
+								// eslint-disable-next-line max-depth
+								if (player) continue;
+
 								dataCache.splice(dataCache.indexOf(dataCache.find(({ guildId: id }) => id === guildId)!), 1);
 
 								await this.manager.redis?.set(RedisKey.NodePlayers(this.name.toLowerCase()), JSON.stringify(dataCache));
-
-								continue;
 							}
 						}
 
