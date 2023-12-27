@@ -148,8 +148,8 @@ export class VoiceConnection extends EventEmitter {
 	}
 
 	/**
-	 * Update Session ID, Channel ID, Deafen status and Mute status of this instance
-	 * @internal
+	 * Update {@link StateUpdatePartial.session_id | sessionId}, {@link StateUpdatePartial.channel_id | channelId},
+	 * {@link StateUpdatePartial.self_deaf | Deafen} status and {@link StateUpdatePartial.self_mute | Mute} status of this instance
 	 */
 	public setStateUpdate({ session_id, channel_id, self_deaf, self_mute }: StateUpdatePartial): void {
 		this.lastChannelId = this.channelId?.repeat(1) ?? null;
@@ -180,7 +180,6 @@ export class VoiceConnection extends EventEmitter {
 
 	/**
 	 * Sets the server update data for this connection.
-	 * @internal
 	 */
 	public setServerUpdate(data: ServerUpdate): void {
 		if (!data.endpoint) {
