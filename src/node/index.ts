@@ -194,16 +194,23 @@ export class Node {
 			throw new Error("You can't re-use the same instance of a node once disconnected, please re-add the node again");
 		if (this.state === State.Connected) return undefined;
 
-		const version = await (
-			await fetch(`${this.url.replace("ws", "http")}/version`, {
-				headers: { Authorization: this.authorization, "User-Agent": this.manager.options.userAgent }
-			})
-		).text();
-		const versionRegex =
-			/^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+		let unSupportedVersion = false;
 
-		if (Number(versionRegex.exec(version)?.at(1) ?? 0) !== 4)
-			throw new Error(`This node (${this.name}) is only supported for v4`);
+		try {
+			const version = await (
+				await fetch(`${this.url.replace("ws", "http")}/version`, {
+					headers: { Authorization: this.authorization, "User-Agent": this.manager.options.userAgent }
+				})
+			).text();
+			const versionRegex =
+				/^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+
+			if (Number(versionRegex.exec(version)?.at(1) ?? 0) !== 4) unSupportedVersion = true;
+		} catch {
+			/* empty */
+		}
+
+		if (unSupportedVersion) throw new Error(`This node (${this.name}) is only supported for v4`);
 
 		this.state = State.Connecting;
 		this.sessionId = (await this.manager.redis?.get(RedisKey.NodeSession(this.name.toLowerCase()))) ?? null;
