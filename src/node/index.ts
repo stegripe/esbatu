@@ -195,7 +195,7 @@ export class Node {
 		if (this.state === State.Connected) return undefined;
 
 		const version = await (
-			await fetch(`${this.url}/version`, {
+			await fetch(`${this.url.replace("ws", "http")}/version`, {
 				headers: { Authorization: this.authorization, "User-Agent": this.manager.options.userAgent }
 			})
 		).text();
