@@ -132,6 +132,8 @@ export class VoiceConnection extends EventEmitter {
 						throw new Error("The voice connection is not established due to missing connection endpoint");
 				}
 
+			this.manager.emit("debug", `[VOICE => DISCORD] Request connected, guild: ${this.guildId}`);
+
 			this.state = State.Connected;
 		} catch (error: any) {
 			this.manager.emit("debug", `[VOICE => DISCORD] Request connection failure, guild: ${this.guildId}`);
