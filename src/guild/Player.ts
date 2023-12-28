@@ -575,7 +575,7 @@ export class Player extends EventEmitter {
 			default:
 				this.node.manager.emit(
 					"debug",
-					`[PLAYER => ${this.node.name}]: Unknown Player Event Type ${data.type}, Guild: ${this.guildId}`
+					`[PLAYER => ${this.node.name}] Unknown player message, type: ${data.type}, guild: ${this.guildId}.`
 				);
 		}
 	}

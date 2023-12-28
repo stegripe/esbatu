@@ -226,9 +226,9 @@ export class Node {
 
 		this.manager.emit(
 			"debug",
-			`[WS => ${this.name}] Connecting ${this.url}, Version: ${this.version}, Trying to resume? ${Boolean(
+			`[WS => ${this.name}] Connecting ${this.url}, lavalink version: ${this.version}, trying to resume? ${Boolean(
 				this.sessionId
-			)}`
+			)}.`
 		);
 
 		if (!this.initialized) this.initialized = true;
@@ -263,7 +263,7 @@ export class Node {
 	 */
 	public async joinVoiceChannel(options: VoiceChannelOptions): Promise<Player> {
 		if (this.manager.connections.has(options.guildId))
-			throw new Error("This guild already have an existing connection.");
+			throw new Error("This guild already have an existing connection");
 
 		const connection = new VoiceConnection(this.manager, options);
 
@@ -367,10 +367,7 @@ export class Node {
 	private open(response: IncomingMessage): void {
 		const resumed = response.headers["session-resumed"] === "true";
 
-		this.manager.emit(
-			"debug",
-			`[WS => ${this.name}] Connection handshake done! ${this.url}, upgrade headers resumed: ${resumed}`
-		);
+		this.manager.emit("debug", `[WS => ${this.name}] Connection handshake done, upgrade headers resumed: ${resumed}.`);
 
 		this.reconnects = 0;
 		this.state = State.Nearly;
@@ -400,7 +397,7 @@ export class Node {
 
 				this.stats = data;
 
-				this.manager.emit("debug", `[WS => ${this.name}] Node status update, server load of ${this.penalties}`);
+				this.manager.emit("debug", `[WS => ${this.name}] Node status update, server load of ${this.penalties}.`);
 
 				break;
 			case OpCodes.Ready:
@@ -412,7 +409,7 @@ export class Node {
 
 				this.manager.emit(
 					"debug",
-					`[WS => ${this.name}] Lavalink is ready, lavalink resume: ${data.resumed}, icelink resume: ${resumeByLibrary}`
+					`[WS => ${this.name}] Lavalink is ready, lavalink resume: ${data.resumed}, icelink resume: ${resumeByLibrary}.`
 				);
 
 				if (!data.resumed && resumeByLibrary) {
@@ -463,7 +460,7 @@ export class Node {
 							}
 						}
 
-						this.manager.emit("debug", `[WS => ${this.name}] Resuming configured`);
+						this.manager.emit("debug", `[WS => ${this.name}] Resuming configured.`);
 					} catch (error) {
 						this.error(error as Error);
 					}
@@ -482,7 +479,7 @@ export class Node {
 
 				break;
 			default:
-				this.manager.emit("debug", `[WS => ${this.name}] Unknown Message OP ${data.op}`);
+				this.manager.emit("debug", `[WS => ${this.name}] Unknown opcodes message, type: ${data.op}.`);
 		}
 	}
 
@@ -494,7 +491,7 @@ export class Node {
 	 * @internal
 	 */
 	private close(code: number, reason: Buffer): void {
-		this.manager.emit("debug", `[WS => ${this.name}] Connection Closed, Code: ${code || "Unknown Code"}`);
+		this.manager.emit("debug", `[WS => ${this.name}] Connection closed, code: ${code || "unknown"}.`);
 		this.manager.emit("close", this.name, code, reason.toString());
 
 		if (this.shouldClean) void this.clean();
@@ -576,9 +573,9 @@ export class Node {
 		);
 		this.manager.emit(
 			"debug",
-			`[WS => ${this.name}] Reconnecting in ${this.manager.options.reconnectInterval} seconds. ${
+			`[WS => ${this.name}] Reconnecting in ${this.manager.options.reconnectInterval} seconds, ${
 				this.manager.options.reconnectTries - this.reconnects
-			} tries left`
+			} tries left.`
 		);
 
 		setTimeout(() => this.connect(), this.manager.options.reconnectInterval * 1_000);
