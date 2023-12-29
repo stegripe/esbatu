@@ -204,15 +204,18 @@ export class Player extends EventEmitter {
 	 * @returns true if the player was moved, false if not
 	 */
 	public async movePlayer(name?: string): Promise<boolean> {
-		const node = this.node.manager.nodes.get(name!) ?? this.node.manager.idealNode;
+		const idealExcludeCurrentNode = [...this.node.manager.nodes.values()]
+			.filter(node => node.name !== this.node.name && node.state === State.Connected)
+			.sort((a, b) => a.penalties - b.penalties)
+			.shift();
+		const node = this.node.manager.nodes.get(name!) ?? idealExcludeCurrentNode;
 
 		if (!node || node.name === this.node.name) return false;
 		if (node.state !== State.Connected) throw new Error("No available nodes to move to");
 
 		let lastNode = this.node.manager.nodes.get(this.node.name);
-		this._prepareMove = true;
 
-		if (!lastNode || lastNode.state !== State.Connected) lastNode = this.node.manager.idealNode;
+		if (!lastNode || lastNode.state !== State.Connected) lastNode = idealExcludeCurrentNode;
 
 		const ICurrentDataCache = await this.node.manager.redis?.get(RedisKey.NodePlayers(this.node.name.toLowerCase()));
 		const currentDataCache = ICurrentDataCache ? (JSON.parse(ICurrentDataCache) as VoiceChannelOptions[]) : [];
@@ -222,11 +225,13 @@ export class Player extends EventEmitter {
 			1
 		);
 
-		await this.destroyPlayer();
+		this._prepareMove = true;
+
 		await this.node.manager.redis?.set(
 			RedisKey.NodePlayers(this.node.name.toLowerCase()),
 			JSON.stringify(currentDataCache)
 		);
+		if (this.node.state === State.Connected) await this.destroyPlayer();
 
 		try {
 			this.node = node;
