@@ -412,7 +412,7 @@ export class Node {
 					`[WS => ${this.name}] Lavalink is ready, lavalink resume: ${data.resumed}, icelink resume: ${resumeByLibrary}.`
 				);
 
-				if (!data.resumed && resumeByLibrary) {
+				if (resumeByLibrary) {
 					try {
 						const playersWithData: Player[] = [];
 						const playersWithoutData: Player[] = [];
