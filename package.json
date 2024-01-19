@@ -42,7 +42,7 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
-		"undici": "^6.3.0",
+		"undici": "^6.4.0",
 		"ws": "^8.16.0"
 	},
 	"peerDependencies": {
