@@ -240,8 +240,6 @@ export abstract class Icelink extends EventEmitter {
 		}
 
 		this.emit("debug", `[VOICE => DISCORD] State update received, session: ${connection.sessionId}, guild: ${guildId}`);
-
-		return undefined;
 	}
 
 	/**
