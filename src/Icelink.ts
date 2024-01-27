@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-declaration-merging */
 import { EventEmitter } from "node:events";
 import { Redis } from "ioredis";
 import { Node } from "./node/index";
 import { Player } from "./guild/Player";
 import { VoiceConnection } from "./guild/VoiceConnection";
-import { State } from "./Constants";
+import { State, VoiceState } from "./Constants";
 import { Rest } from "./node/Rest";
 import { name as packageName, version as packageVersion } from "../package.json";
 
@@ -177,6 +177,71 @@ export abstract class Icelink extends EventEmitter {
 		if (!node) throw new Error("The node name you specified doesn't exist");
 
 		node.disconnect(1000, reason);
+	}
+
+	public updateInstance(packet: any): void {
+		const guildId = packet.d.guild_id;
+		const connection = this.connections.get(guildId);
+		const AllowedPackets = ["VOICE_STATE_UPDATE", "VOICE_SERVER_UPDATE"];
+
+		if (!connection || !AllowedPackets.includes(packet.t)) return undefined;
+
+		if (packet.t === "VOICE_SERVER_UPDATE") {
+			if (!packet.d.endpoint) {
+				connection.emit("connectionUpdate", VoiceState.SessionEndpointMissing);
+
+				return undefined;
+			}
+			if (!connection.sessionId) {
+				connection.emit("connectionUpdate", VoiceState.SessionIdMissing);
+
+				return undefined;
+			}
+
+			connection.lastRegion = connection.region?.repeat(1) ?? null;
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			connection.region = packet.d.endpoint.split(".").shift()?.replace(/[0-9]/g, "") ?? null;
+			connection.serverUpdate = packet.d;
+
+			if (connection.region && connection.lastRegion !== connection.region)
+				this.emit(
+					"debug",
+					`[VOICE => DISCORD] Voice region changed, old region: ${connection.lastRegion}, new region: ${connection.region}, guild: ${guildId}`
+				);
+
+			connection.emit("connectionUpdate", VoiceState.SessionReady);
+			this.emit("debug", `[VOICE => DISCORD] Server update received, guild: ${guildId}`);
+
+			return undefined;
+		}
+
+		const userId = packet.d.user_id;
+
+		if (userId !== this.id) return undefined;
+
+		connection.lastChannelId = connection.channelId?.repeat(1) ?? null;
+		connection.channelId = packet.d.channel_id;
+		connection.deafened = packet.d.self_deaf;
+		connection.muted = packet.d.self_mute;
+		connection.sessionId = packet.d.session_id ?? null;
+
+		if (connection.channelId && connection.lastChannelId !== connection.channelId)
+			this.emit(
+				"debug",
+				`[VOICE => DISCORD] Channel moved, old channel: ${connection.lastChannelId}, new channel: ${connection.channelId}, guild: ${guildId}`
+			);
+
+		if (!connection.channelId) {
+			connection.state = State.Disconnected;
+
+			this.emit("debug", `[VOICE => DISCORD] Channel disconnected, guild: ${guildId}`);
+
+			return undefined;
+		}
+
+		this.emit("debug", `[VOICE => DISCORD] State update received, session: ${connection.sessionId}, guild: ${guildId}`);
+
+		return undefined;
 	}
 
 	/**
