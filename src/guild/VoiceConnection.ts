@@ -150,66 +150,6 @@ export class VoiceConnection extends EventEmitter {
 	}
 
 	/**
-	 * Update {@link StateUpdatePartial.session_id | sessionId}, {@link StateUpdatePartial.channel_id | channelId},
-	 * {@link StateUpdatePartial.self_deaf | Deafen} status and {@link StateUpdatePartial.self_mute | Mute} status of this instance
-	 */
-	public setStateUpdate({ session_id, channel_id, self_deaf, self_mute }: StateUpdatePartial): void {
-		this.lastChannelId = this.channelId?.repeat(1) ?? null;
-		this.channelId = channel_id;
-		this.deafened = self_deaf;
-		this.muted = self_mute;
-		this.sessionId = session_id ?? null;
-
-		if (this.channelId && this.lastChannelId !== this.channelId)
-			this.manager.emit(
-				"debug",
-				`[VOICE => DISCORD] Channel moved, old channel: ${this.lastChannelId}, new channel: ${this.channelId}, guild: ${this.guildId}`
-			);
-
-		if (!this.channelId) {
-			this.state = State.Disconnected;
-
-			this.manager.emit("debug", `[VOICE => DISCORD] Channel disconnected, guild: ${this.guildId}`);
-
-			return undefined;
-		}
-
-		this.manager.emit(
-			"debug",
-			`[VOICE => DISCORD] State update received, session: ${this.sessionId}, guild: ${this.guildId}`
-		);
-	}
-
-	/**
-	 * Sets the server update data for this connection.
-	 */
-	public setServerUpdate(data: ServerUpdate): void {
-		if (!data.endpoint) {
-			this.emit("connectionUpdate", VoiceState.SessionEndpointMissing);
-
-			return undefined;
-		}
-		if (!this.sessionId) {
-			this.emit("connectionUpdate", VoiceState.SessionIdMissing);
-
-			return undefined;
-		}
-
-		this.lastRegion = this.region?.repeat(1) ?? null;
-		this.region = data.endpoint.split(".").shift()?.replace(/[0-9]/g, "") ?? null;
-		this.serverUpdate = data;
-
-		if (this.region && this.lastRegion !== this.region)
-			this.manager.emit(
-				"debug",
-				`[VOICE => DISCORD] Voice region changed, old region: ${this.lastRegion}, new region: ${this.region}, guild: ${this.guildId}`
-			);
-
-		this.emit("connectionUpdate", VoiceState.SessionReady);
-		this.manager.emit("debug", `[VOICE => DISCORD] Server update received, guild: ${this.guildId}`);
-	}
-
-	/**
 	 * Send voice data to Discord.
 	 * @internal
 	 */
