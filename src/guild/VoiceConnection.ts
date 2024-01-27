@@ -103,7 +103,7 @@ export class VoiceConnection extends EventEmitter {
 		this.removeAllListeners();
 		this.sendVoiceUpdate();
 
-		this.manager.emit("debug", `[VOICE => NODE & DISCORD] Connection destroyed, guild: ${this.guildId}`);
+		this.manager.emit("debug", `[VOICE => NODE & DISCORD] Connection destroyed, guild: ${this.guildId}.`);
 	}
 
 	/**
@@ -116,7 +116,7 @@ export class VoiceConnection extends EventEmitter {
 		this.state = State.Connecting;
 
 		this.sendVoiceUpdate();
-		this.manager.emit("debug", `[VOICE => DISCORD] Requesting connection, guild: ${this.guildId}`);
+		this.manager.emit("debug", `[VOICE => DISCORD] Requesting connection, guild: ${this.guildId}.`);
 
 		const controller = new AbortController();
 		const timeout = setTimeout(() => controller.abort(), this.manager.options.voiceConnectionTimeout * 1_000);
@@ -132,11 +132,11 @@ export class VoiceConnection extends EventEmitter {
 						throw new Error("The voice connection is not established due to missing connection endpoint");
 				}
 
-			this.manager.emit("debug", `[VOICE => DISCORD] Request connected, guild: ${this.guildId}`);
+			this.manager.emit("debug", `[VOICE => DISCORD] Request connected, guild: ${this.guildId}.`);
 
 			this.state = State.Connected;
 		} catch (error: any) {
-			this.manager.emit("debug", `[VOICE => DISCORD] Request connection failure, guild: ${this.guildId}`);
+			this.manager.emit("debug", `[VOICE => DISCORD] Request connection failure, guild: ${this.guildId}.`);
 
 			if ((error as Error).name === "AbortError")
 				throw new Error(
