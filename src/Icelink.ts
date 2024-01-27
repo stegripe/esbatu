@@ -206,11 +206,11 @@ export abstract class Icelink extends EventEmitter {
 			if (connection.region && connection.lastRegion !== connection.region)
 				this.emit(
 					"debug",
-					`[VOICE => DISCORD] Voice region changed, old region: ${connection.lastRegion}, new region: ${connection.region}, guild: ${guildId}`
+					`[VOICE => DISCORD] Voice region changed, old region: ${connection.lastRegion}, new region: ${connection.region}, guild: ${guildId}.`
 				);
 
 			connection.emit("connectionUpdate", VoiceState.SessionReady);
-			this.emit("debug", `[VOICE => DISCORD] Server update received, guild: ${guildId}`);
+			this.emit("debug", `[VOICE => DISCORD] Server update received, guild: ${guildId}.`);
 
 			return undefined;
 		}
@@ -228,18 +228,21 @@ export abstract class Icelink extends EventEmitter {
 		if (connection.channelId && connection.lastChannelId !== connection.channelId)
 			this.emit(
 				"debug",
-				`[VOICE => DISCORD] Channel moved, old channel: ${connection.lastChannelId}, new channel: ${connection.channelId}, guild: ${guildId}`
+				`[VOICE => DISCORD] Channel moved, old channel: ${connection.lastChannelId}, new channel: ${connection.channelId}, guild: ${guildId}.`
 			);
 
 		if (!connection.channelId) {
 			connection.state = State.Disconnected;
 
-			this.emit("debug", `[VOICE => DISCORD] Channel disconnected, guild: ${guildId}`);
+			this.emit("debug", `[VOICE => DISCORD] Channel disconnected, guild: ${guildId}.`);
 
 			return undefined;
 		}
 
-		this.emit("debug", `[VOICE => DISCORD] State update received, session: ${connection.sessionId}, guild: ${guildId}`);
+		this.emit(
+			"debug",
+			`[VOICE => DISCORD] State update received, session: ${connection.sessionId}, guild: ${guildId}.`
+		);
 	}
 
 	/**
