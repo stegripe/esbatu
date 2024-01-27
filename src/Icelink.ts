@@ -179,6 +179,10 @@ export abstract class Icelink extends EventEmitter {
 		node.disconnect(1000, reason);
 	}
 
+	/**
+	 * update an instance for voice connection (voice state, and voice server).
+	 * @param packet Packet instance from Discord Gateway.
+	 */
 	public updateInstance(packet: any): void {
 		const guildId = packet.d.guild_id;
 		const connection = this.connections.get(guildId);
