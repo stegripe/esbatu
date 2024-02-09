@@ -34,8 +34,8 @@ export class extends Icelink {
     }
 
     sendPacket(shardId, payload, important) {
-		return this.client.ws.shards.get(shardId)?.send(payload, important);
-	}
+        return this.client.ws.shards.get(shardId)?.send(payload, important);
+    }
 }
 ```
 
@@ -46,20 +46,21 @@ import { Client } from "discord.js"
 
 const client = new Client({
     intents: [
-		"Guilds",
-		"GuildMembers",
-		"GuildVoiceStates",
-		"GuildMessages"
-	]
+        "Guilds",
+        "GuildMembers",
+        "GuildVoiceStates",
+        "GuildMessages"
+    ]
 });
 
-client.icelink = new Icelink(client, { nodes: [
-    {
-        name: "default",
-        url: "localhost:2333",
-        authorization: "youshallnotpass"
-    }
-]
+client.icelink = new Icelink(client, {
+    nodes: [
+        {
+            name: "default",
+            url: "localhost:2333",
+            authorization: "youshallnotpass"
+        }
+    ]
 });
 
 client.icelink.on("error", (_, error) => console.error(error));
@@ -68,10 +69,10 @@ client.on("ready" async () => {
     client.icelink.id = client.user.id;
 
     for (const node of client.icelink.options.nodes)
-		client.icelink.addNode(node).catch(error => client.icelink.emit("error", node.name, error));
+        client.icelink.addNode(node).catch(error => client.icelink.emit("error", node.name, error));
 
     const node = client.icelink.idealNode;
-    const player = await client.icelink.joinVoiceChannel({
+    const player = await node.joinVoiceChannel({
         guildId: "836189103103811192",
         channelId: "721217201021217261",
         shardId: 0
