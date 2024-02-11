@@ -42,7 +42,8 @@ export class extends Icelink {
 Afterwards we can create a quite simple example:
 
 ```js
-import { Client } from "discord.js"
+import { Client } from "discord.js";
+import { Icelink } from "./Icelink.js";
 
 const client = new Client({
     intents: [
