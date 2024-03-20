@@ -39,7 +39,7 @@
 		"prettier": "^3.2.5",
 		"tsup": "^8.0.2",
 		"typedoc": "^0.25.11",
-		"typescript": "^5.4.2"
+		"typescript": "^5.4.3"
 	},
 	"dependencies": {
 		"undici": "^6.7.1",
