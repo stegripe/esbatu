@@ -1,6 +1,6 @@
 {
 	"name": "icelink",
-	"version": "1.0.0-dev",
+	"version": "1.0.0",
 	"description": "Icelink outshines Lavalink with its superior stability, frequent updates, and extended capabilities. Featuring new handling mechanisms, support for ESM and CommonJS, and efficient Redis caching, Icelink offers an enhanced and reliable music streaming experience.",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
@@ -64,5 +64,8 @@
 				"default": "./dist/index.mjs"
 			}
 		}
-	}
+	},
+	"files": [
+		"dist"
+	]
 }
