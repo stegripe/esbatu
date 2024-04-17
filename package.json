@@ -46,7 +46,7 @@
 		"ws": "^8.16.0"
 	},
 	"peerDependencies": {
-		"ioredis": ">=5.4.0"
+		"ioredis": ">=5.4.1"
 	},
 	"peerDependenciesMeta": {
 		"ioredis": {
