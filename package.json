@@ -43,7 +43,7 @@
 	},
 	"dependencies": {
 		"undici": "^6.19.0",
-		"ws": "^8.17.0"
+		"ws": "^8.17.1"
 	},
 	"peerDependencies": {
 		"ioredis": ">=5.4.1"
