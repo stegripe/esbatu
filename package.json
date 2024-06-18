@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@clytage/eslint-config": "^3.0.1",
-		"@types/node": "^20.14.3",
+		"@types/node": "^20.14.5",
 		"@types/ws": "^8.5.10",
 		"@typescript-eslint/eslint-plugin": "^7.13.1",
 		"@typescript-eslint/parser": "^7.13.1",
@@ -42,7 +42,7 @@
 		"typescript": "^5.4.5"
 	},
 	"dependencies": {
-		"undici": "^6.19.1",
+		"undici": "^6.19.2",
 		"ws": "^8.17.1"
 	},
 	"peerDependencies": {
