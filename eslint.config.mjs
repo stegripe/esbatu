@@ -1,10 +1,10 @@
-import { common, modules, node, stylistic, typescript, extend } from "@stegripe/eslint-config";
+import { common, modules, node, prettier, typescript, extend } from "@stegripe/eslint-config";
 
 export default [
     ...common,
     ...modules,
     ...node,
-    ...stylistic,
+    ...prettier,
     ...extend(typescript, [
         {
             rule: "typescript/naming-convention",

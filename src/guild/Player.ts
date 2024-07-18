@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/check-param-names, stylistic/max-len, tsdoc/syntax */
+/* eslint-disable jsdoc/check-param-names, tsdoc/syntax */
 import { EventEmitter } from "node:events";
 import type { OpCodes } from "../Constants";
 import { RedisKey, State } from "../Constants";
@@ -220,10 +220,11 @@ export class Player extends EventEmitter {
      * @returns true if the player was moved, false if not
      */
     public async movePlayer(name?: string): Promise<boolean> {
-        const idealExcludeCurrentNode = (): Node | undefined => [...this.node.manager.nodes.values()]
-            .filter(node0 => node0.name !== this.node.name && node0.state === State.Connected)
-            .sort((a, b) => a.penalties - b.penalties)
-            .shift();
+        const idealExcludeCurrentNode = (): Node | undefined =>
+            [...this.node.manager.nodes.values()]
+                .filter(node0 => node0.name !== this.node.name && node0.state === State.Connected)
+                .sort((a, b) => a.penalties - b.penalties)
+                .shift();
         // eslint-disable-next-line typescript/no-non-null-assertion
         const node = this.node.manager.nodes.get(name!) ?? idealExcludeCurrentNode();
 
@@ -237,7 +238,8 @@ export class Player extends EventEmitter {
         const ICurrentDataCache = await this.node.manager.redis?.get(
             RedisKey.NodePlayers(this.node.name.toLowerCase())
         );
-        const currentDataCache = ICurrentDataCache === null ? [] : (JSON.parse(ICurrentDataCache ?? "") as VoiceChannelOptions[]);
+        const currentDataCache =
+            ICurrentDataCache === null ? [] : (JSON.parse(ICurrentDataCache ?? "") as VoiceChannelOptions[]);
 
         currentDataCache.splice(
             // eslint-disable-next-line typescript/no-non-null-assertion
@@ -586,7 +588,7 @@ export class Player extends EventEmitter {
      *
      * @internal
      */
-    public onPlayerUpdate(data: { state: { position: number; ping: number; connected: boolean; }; }): void {
+    public onPlayerUpdate(data: { state: { position: number; ping: number; connected: boolean } }): void {
         if (this._prepareMove) return undefined;
 
         const { position, ping, connected } = data.state;
@@ -606,7 +608,7 @@ export class Player extends EventEmitter {
      * @param data JSON data from Lavalink.
      * @internal
      */
-    public onPlayerEvent(data: { type: string; track: Track; }): void {
+    public onPlayerEvent(data: { type: string; track: Track }): void {
         if (this._prepareMove) return undefined;
 
         switch (data.type) {
@@ -648,10 +650,10 @@ export class Player extends EventEmitter {
 // eslint-disable-next-line typescript/no-redeclare
 export declare type Player = {
     on: ((event: "closed", listener: (reason: WebSocketClosedEvent) => void) => Player) &
-    ((event: "end", listener: (reason: TrackEndEvent) => void) => Player) &
-    ((event: "exception", listener: (reason: TrackExceptionEvent) => void) => Player) &
-    ((event: "resumed", listener: (player: Player) => void) => Player) &
-    ((event: "start", listener: (data: TrackStartEvent) => void) => Player) &
-    ((event: "stuck", listener: (data: TrackStuckEvent) => void) => Player) &
-    ((event: "update", listener: (data: PlayerUpdate) => void) => Player);
+        ((event: "end", listener: (reason: TrackEndEvent) => void) => Player) &
+        ((event: "exception", listener: (reason: TrackExceptionEvent) => void) => Player) &
+        ((event: "resumed", listener: (player: Player) => void) => Player) &
+        ((event: "start", listener: (data: TrackStartEvent) => void) => Player) &
+        ((event: "stuck", listener: (data: TrackStuckEvent) => void) => Player) &
+        ((event: "update", listener: (data: PlayerUpdate) => void) => Player);
 };

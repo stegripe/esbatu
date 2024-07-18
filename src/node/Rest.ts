@@ -132,7 +132,7 @@ export type UpdatePlayerInfo = {
 };
 
 export type UpdatePlayerOptions = {
-    track?: { encoded?: string | null; };
+    track?: { encoded?: string | null };
     position?: number;
     endTime?: number;
     volume?: number;
@@ -178,7 +178,8 @@ export class Rest {
          * @param encodedTrack A encoded track.
          * @returns Promise that resolves to a track.
          */
-        singleTrack: async (encodedTrack: string): Promise<Track> => this.request({ endpoint: "/decodetrack", options: { params: { encodedTrack } } }),
+        singleTrack: async (encodedTrack: string): Promise<Track> =>
+            this.request({ endpoint: "/decodetrack", options: { params: { encodedTrack } } }),
 
         /**
          * Decodes multiple tracks into their info.
@@ -186,14 +187,15 @@ export class Rest {
          * @param encodeds A encodeds track.
          * @returns Promise that resolves to an array of tracks.
          */
-        multipleTracks: async (encodeds: string[]): Promise<Track[]> => this.request({
-            endpoint: "/decodetracks",
-            options: {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: encodeds
-            }
-        })
+        multipleTracks: async (encodeds: string[]): Promise<Track[]> =>
+            this.request({
+                endpoint: "/decodetracks",
+                options: {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: encodeds
+                }
+            })
     };
 
     /**
@@ -235,7 +237,7 @@ export class Rest {
      */
     public constructor(node: Node, options: NodeOption) {
         this.node = node;
-        this.url = `${options.secure ?? false ? "https" : "http"}://${options.url}`;
+        this.url = `${(options.secure ?? false) ? "https" : "http"}://${options.url}`;
         this.authorization = options.authorization;
 
         Object.defineProperties(this, {

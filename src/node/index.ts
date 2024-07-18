@@ -1,4 +1,4 @@
-/* eslint-disable stylistic/max-len, typescript/no-unsafe-argument, typescript/no-unsafe-assignment, typescript/no-unsafe-member-access, typescript/no-non-null-assertion, typescript/no-shadow, typescript/naming-convention, tsdoc/syntax, no-await-in-loop, no-param-reassign */
+/* eslint-disable typescript/no-unsafe-argument, typescript/no-unsafe-assignment, typescript/no-unsafe-member-access, typescript/no-non-null-assertion, typescript/no-shadow, typescript/naming-convention, tsdoc/syntax, no-await-in-loop, no-param-reassign */
 import { Buffer } from "node:buffer";
 import type { IncomingMessage } from "node:http";
 import { setTimeout } from "node:timers";
@@ -164,7 +164,7 @@ export class Node {
         this.manager = manager;
         this.rest = new (manager.options.structures.rest ?? Rest)(this, options);
         this.name = options.name;
-        this.url = `${options.secure ?? false ? "wss" : "ws"}://${options.url}`;
+        this.url = `${(options.secure ?? false) ? "wss" : "ws"}://${options.url}`;
         this.authorization = options.authorization;
 
         Object.defineProperties(this, {
@@ -192,7 +192,6 @@ export class Node {
         if (!this.stats) return penalties;
 
         penalties += this.stats.players;
-        // eslint-disable-next-line stylistic/no-mixed-operators
         penalties += Math.round(1.05 ** (100 * this.stats.cpu.systemLoad) * 10 - 10);
 
         if (this.stats.frameStats) {
@@ -233,8 +232,9 @@ export class Node {
                 await fetch(`${this.url.replace("ws", "http")}/version`, {
                     headers: { Authorization: this.authorization, "User-Agent": this.manager.options.userAgent }
                 })
-            // eslint-disable-next-line unicorn/no-await-expression-member
-            ).text();
+            )
+                // eslint-disable-next-line unicorn/no-await-expression-member
+                .text();
             const versionRegex =
                 /^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[A-Za-z-][\dA-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][\dA-Za-z-]*))*))?(?:\+(?<buildmetadata>[\dA-Za-z-]+(?:\.[\dA-Za-z-]+)*))?$/u;
 
@@ -246,7 +246,7 @@ export class Node {
         if (unSupportedVersion) throw new Error(`This node (${this.name}) is only supported for v4`);
 
         this.state = State.Connecting;
-        this.sessionId = await this.manager.redis?.get(RedisKey.NodeSession(this.name.toLowerCase())) ?? null;
+        this.sessionId = (await this.manager.redis?.get(RedisKey.NodeSession(this.name.toLowerCase()))) ?? null;
 
         const headers: NonResumableHeaders | ResumableHeaders = {
             "Client-Name": this.manager.options.userAgent,
@@ -304,7 +304,8 @@ export class Node {
      * @returns The created new Player.
      */
     public async joinVoiceChannel(options: VoiceChannelOptions): Promise<Player> {
-        if (this.manager.connections.has(options.guildId)) throw new Error("This guild already have an existing connection");
+        if (this.manager.connections.has(options.guildId))
+            throw new Error("This guild already have an existing connection");
 
         const connection = new VoiceConnection(this.manager, options);
 
@@ -500,7 +501,8 @@ export class Node {
                             const IDataCache = await this.manager.redis?.get(
                                 RedisKey.NodePlayers(this.name.toLowerCase())
                             );
-                            const dataCache = IDataCache === null ? [] : (JSON.parse(IDataCache ?? "") as VoiceChannelOptions[]);
+                            const dataCache =
+                                IDataCache === null ? [] : (JSON.parse(IDataCache ?? "") as VoiceChannelOptions[]);
 
                             for (const { guildId, channelId, shardId, mute, deaf } of dataCache) {
                                 const player = await this.joinVoiceChannel({
@@ -509,7 +511,7 @@ export class Node {
                                     shardId,
                                     mute,
                                     deaf
-                                // eslint-disable-next-line typescript/no-empty-function
+                                    // eslint-disable-next-line typescript/no-empty-function
                                 }).catch(() => {});
 
                                 if (player) continue;
@@ -612,7 +614,10 @@ export class Node {
     private async clean(): Promise<void> {
         let count = 0;
 
-        if (!this.manager.options.moveOnDisconnect) { this.destroy(count); return; }
+        if (!this.manager.options.moveOnDisconnect) {
+            this.destroy(count);
+            return;
+        }
 
         const players = [...this.manager.players.values()].filter(player => player.node.name === this.name);
 

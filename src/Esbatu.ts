@@ -317,10 +317,10 @@ export type Esbatu = EventEmitter & {
         event: "reconnecting",
         listener: (name: string, reconnectsLeft: number, reconnectInterval: number) => void
     ) => Esbatu) &
-    ((event: "close", listener: (name: string, code: number, reason: string) => void) => Esbatu) &
-    ((event: "debug", listener: (debug: string) => void) => Esbatu) &
-    ((event: "disconnect", listener: (name: string, count: number) => void) => Esbatu) &
-    ((event: "error", listener: (name: string, error: Error) => void) => Esbatu) &
-    ((event: "raw", listener: (name: string, data: unknown) => void) => Esbatu) &
-    ((event: "ready", listener: (name: string, reconnected: boolean) => void) => Esbatu);
+        ((event: "close", listener: (name: string, code: number, reason: string) => void) => Esbatu) &
+        ((event: "debug", listener: (debug: string) => void) => Esbatu) &
+        ((event: "disconnect", listener: (name: string, count: number) => void) => Esbatu) &
+        ((event: "error", listener: (name: string, error: Error) => void) => Esbatu) &
+        ((event: "raw", listener: (name: string, data: unknown) => void) => Esbatu) &
+        ((event: "ready", listener: (name: string, reconnected: boolean) => void) => Esbatu);
 };

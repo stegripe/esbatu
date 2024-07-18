@@ -1,0 +1,16 @@
+# Packages
+node_modules/
+
+# Auto Generated
+pnpm-lock.yaml
+dist
+CHANGELOG.md
+
+# Cache
+.cache/
+.eslintcache
+.prettiercache
+.tsbuildinfo
+
+# Miscellaneous
+.github/workflows

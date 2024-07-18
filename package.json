@@ -8,20 +8,20 @@
     "scripts": {
         "build": "tsc --noEmit && tsup --config tsup-config.json",
         "build:docs": "typedoc --theme default --readme README.md --out docs/ --entryPointStrategy expand src/.",
-        "format": "cross-env TIMING=1 eslint --fix src",
-        "lint": "cross-env TIMING=1 eslint src",
+        "format": "prettier --write . && cross-env TIMING=1 eslint --fix --format=pretty src",
+        "lint": "prettier --check . && cross-env TIMING=1 eslint --format=pretty src",
         "prepack": "pnpm lint && pnpm build"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/stegripe/icelink.git"
+        "url": "git+https://github.com/stegripe/esbatu.git"
     },
     "author": "Fab1o0107 <fabio@stegripe.org>",
     "license": "AGPL-3.0",
     "bugs": {
-        "url": "https://github.com/stegripe/icelink/issues"
+        "url": "https://github.com/stegripe/esbatu/issues"
     },
-    "homepage": "https://github.com/stegripe/icelink#readme",
+    "homepage": "https://github.com/stegripe/esbatu#readme",
     "engines": {
         "node": ">=18.x"
     },
@@ -31,6 +31,10 @@
         "@types/ws": "^8.5.11",
         "cross-env": "^7.0.3",
         "eslint": "^9.7.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-formatter-pretty": "^6.0.1",
+        "eslint-plugin-prettier": "^5.2.1",
+        "prettier": "^3.3.3",
         "tsup": "^8.1.2",
         "typedoc": "^0.26.4",
         "typescript": "^5.5.3"
