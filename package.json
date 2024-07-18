@@ -1,68 +1,65 @@
 {
-	"name": "icelink",
-	"version": "1.0.0-dev",
-	"description": "Icelink outshines Lavalink with its superior stability, frequent updates, and extended capabilities. Featuring new handling mechanisms, support for ESM and CommonJS, and efficient Redis caching, Icelink offers an enhanced and reliable music streaming experience.",
-	"main": "./dist/index.js",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.ts",
-	"scripts": {
-		"build": "tsc --noEmit && tsup --config tsup-config.json",
-		"build:docs": "typedoc --theme default --readme README.md --out docs/ --entryPointStrategy expand src/.",
-		"format": "prettier --write . && cross-env TIMING=1 eslint --fix --format=pretty src",
-		"lint": "prettier --check . && cross-env TIMING=1 eslint --format=pretty src",
-		"prepack": "pnpm lint && pnpm build"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/stegripe/icelink.git"
-	},
-	"author": "Fab1o0107 <fabio@stegripe.org>",
-	"license": "AGPL-3.0",
-	"bugs": {
-		"url": "https://github.com/stegripe/icelink/issues"
-	},
-	"homepage": "https://github.com/stegripe/icelink#readme",
-	"engines": {
-		"node": ">=18.x"
-	},
-	"devDependencies": {
-		"@clytage/eslint-config": "^3.0.1",
-		"@types/node": "^20.14.10",
-		"@types/ws": "^8.5.10",
-		"@typescript-eslint/eslint-plugin": "^7.16.1",
-		"@typescript-eslint/parser": "^7.16.1",
-		"cross-env": "^7.0.3",
-		"eslint": "^8.57.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-formatter-pretty": "^5.0.0",
-		"eslint-plugin-prettier": "^5.2.1",
-		"prettier": "^3.3.2",
-		"tsup": "^8.1.0",
-		"typedoc": "^0.26.3",
-		"typescript": "^5.5.3"
-	},
-	"dependencies": {
-		"undici": "^6.19.2",
-		"ws": "^8.18.0"
-	},
-	"peerDependencies": {
-		"ioredis": ">=5.4.1"
-	},
-	"peerDependenciesMeta": {
-		"ioredis": {
-			"optional": true
-		}
-	},
-	"exports": {
-		".": {
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			},
-			"import": {
-				"types": "./dist/index.d.mts",
-				"default": "./dist/index.mjs"
-			}
-		}
-	}
+    "name": "esbatu",
+    "version": "1.0.0-dev",
+    "description": "Esbatu surpasses Lavalink with superior stability, frequent updates, extended capabilities, and efficient Redis caching, offering a reliable music streaming experience.",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc --noEmit && tsup --config tsup-config.json",
+        "build:docs": "typedoc --theme default --readme README.md --out docs/ --entryPointStrategy expand src/.",
+        "format": "cross-env TIMING=1 eslint --fix src",
+        "lint": "cross-env TIMING=1 eslint src",
+        "prepack": "pnpm lint && pnpm build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/stegripe/icelink.git"
+    },
+    "author": "Fab1o0107 <fabio@stegripe.org>",
+    "license": "AGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/stegripe/icelink/issues"
+    },
+    "homepage": "https://github.com/stegripe/icelink#readme",
+    "engines": {
+        "node": ">=18.x"
+    },
+    "devDependencies": {
+        "@stegripe/eslint-config": "^1.0.0",
+        "@types/node": "^20.14.11",
+        "@types/ws": "^8.5.11",
+        "cross-env": "^7.0.3",
+        "eslint": "^9.7.0",
+        "tsup": "^8.1.2",
+        "typedoc": "^0.26.4",
+        "typescript": "^5.5.3"
+    },
+    "dependencies": {
+        "undici": "^6.19.2",
+        "ws": "^8.18.0"
+    },
+    "peerDependencies": {
+        "ioredis": ">=5.4.1"
+    },
+    "peerDependenciesMeta": {
+        "ioredis": {
+            "optional": true
+        }
+    },
+    "exports": {
+        ".": {
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            },
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            }
+        }
+    },
+    "files": [
+        "dist"
+    ]
 }

@@ -1,11 +1,11 @@
-# Icelink
+# Esbatu
 
-> Icelink is an innovative project that surpasses Lavalink, offering a superior audio streaming experience. Built as a refined alternative, Icelink boasts enhanced stability, frequent updates, and a robust foundation that supports extendable structures. It introduces new handling mechanisms, ensures compatibility with ESM (ECMAScript Modules) and CommonJS, and integrates Redis caching for optimized performance. Icelink represents a cutting-edge solution for streaming music, elevating the user experience with its advanced features and forward-looking approach.
+> Esbatu surpasses Lavalink with enhanced stability, frequent updates, and support for ESM and CommonJS, offering a superior audio streaming experience. It features new handling mechanisms and uses Redis to manage current song/session resources, preventing replay issues.
 
 <div align="center">
-    <a href="https://www.npmjs.com/package/icelink"><img src="https://img.shields.io/npm/v/icelink.svg?maxAge=3600" alt="NPM version" ><a/>
-    <a href="https://www.npmjs.com/package/icelink"><img src="https://img.shields.io/npm/dt/icelink.svg?maxAge=3600" alt="NPM downloads" /></a>
-    <a href="https://github.com/stegripe/icelink/actions"><img src="https://github.com/stegripe/icelink/actions/workflows/test.yml/badge.svg" alt="Tests status" /></a>
+    <a href="https://www.npmjs.com/package/esbatu"><img src="https://img.shields.io/npm/v/esbatu.svg?maxAge=3600" alt="NPM version" ><a/>
+    <a href="https://www.npmjs.com/package/esbatu"><img src="https://img.shields.io/npm/dt/esbatu.svg?maxAge=3600" alt="NPM downloads" /></a>
+    <a href="https://github.com/stegripe/esbatu/actions"><img src="https://github.com/stegripe/esbatu/actions/workflows/test.yml/badge.svg" alt="Tests status" /></a>
 </div>
 
 ## Installation
@@ -13,20 +13,20 @@
 **Node.js 18 or newer is required.**
 
 ```sh
-npm install icelink
-yarn add icelink
-pnpm add icelink
-bun add icelink
+npm install esbatu
+yarn add esbatu
+pnpm add esbatu
+bun add esbatu
 ```
 
 ## Example usage
 
-Create class extends Icelink for depending on your library implementation (like discord.js):
+Create class extends Esbatu for depending on your library implementation (like discord.js):
 
 ```js
-import { Icelink } from "icelink";
+import { Esbatu } from "esbatu";
 
-export class extends Icelink {
+export class extends Esbatu {
     constructor(client, options) {
         super(options);
 
@@ -43,7 +43,7 @@ Afterwards we can create a quite simple example:
 
 ```js
 import { Client } from "discord.js";
-import { Icelink } from "./Icelink.js";
+import { Esbatu } from "./Esbatu.js";
 
 const client = new Client({
     intents: [
@@ -54,7 +54,7 @@ const client = new Client({
     ]
 });
 
-client.icelink = new Icelink(client, {
+client.esbatu = new Esbatu(client, {
     nodes: [
         {
             name: "default",
@@ -64,15 +64,15 @@ client.icelink = new Icelink(client, {
     ]
 });
 
-client.icelink.on("error", (_, error) => console.error(error));
-client.on("raw", packet => client.icelink.updateInstance(packet));
+client.esbatu.on("error", (_, error) => console.error(error));
+client.on("raw", packet => client.esbatu.updateInstance(packet));
 client.on("ready" async () => {
-    client.icelink.id = client.user.id;
+    client.esbatu.id = client.user.id;
 
-    for (const node of client.icelink.options.nodes)
-        client.icelink.addNode(node).catch(error => client.icelink.emit("error", node.name, error));
+    for (const node of client.esbatu.options.nodes)
+        client.esbatu.addNode(node).catch(error => client.esbatu.emit("error", node.name, error));
 
-    const node = client.icelink.idealNode;
+    const node = client.esbatu.idealNode;
     const player = await node.joinVoiceChannel({
         guildId: "836189103103811192",
         channelId: "721217201021217261",
@@ -84,7 +84,7 @@ client.on("ready" async () => {
     await player.playTrack({ track: resultTrack.data.encoded });
 
     setTimeout(async () => {
-        await client.icelink.leaveVoiceChannel(player.guildId);
+        await client.esbatu.leaveVoiceChannel(player.guildId);
     }, 60_000);
 });
 

@@ -1,53 +1,53 @@
 {
-	// Mapped from https://www.typescriptlang.org/tsconfig
-	"compilerOptions": {
-		// Type Checking
-		"allowUnreachableCode": false,
-		"allowUnusedLabels": false,
-		"exactOptionalPropertyTypes": false,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noPropertyAccessFromIndexSignature": false,
-		"noUncheckedIndexedAccess": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"strict": true,
+    // Mapped from https://www.typescriptlang.org/tsconfig
+    "compilerOptions": {
+        // Type Checking
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "exactOptionalPropertyTypes": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strict": true,
 
-		// Modules
-		"allowArbitraryExtensions": false,
-		"allowImportingTsExtensions": false,
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
-		"resolveJsonModule": true,
-		"resolvePackageJsonExports": true,
-		"resolvePackageJsonImports": true,
+        // Modules
+        "allowArbitraryExtensions": false,
+        "allowImportingTsExtensions": false,
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "resolvePackageJsonExports": true,
+        "resolvePackageJsonImports": true,
 
-		// Emit
-		"declaration": true,
-		"declarationMap": true,
-		"importHelpers": false,
-		"newLine": "lf",
-		"noEmitHelpers": true,
-		"outDir": "dist",
-		"preserveConstEnums": true,
-		"removeComments": false,
-		"rootDir": "src",
-		"sourceMap": true,
+        // Emit
+        "declaration": true,
+        "declarationMap": true,
+        "importHelpers": false,
+        "newLine": "lf",
+        "noEmitHelpers": true,
+        "outDir": "dist",
+        "preserveConstEnums": true,
+        "removeComments": false,
+        "rootDir": "src",
+        "sourceMap": true,
 
-		// Language and Environment
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"lib": ["ESNext"],
-		"target": "ESNext",
-		"useDefineForClassFields": true,
+        // Language and Environment
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": ["ESNext"],
+        "target": "ESNext",
+        "useDefineForClassFields": true,
 
-		// Interop Constraints
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": false,
-		"forceConsistentCasingInFileNames": true,
-		"isolatedModules": true
-	},
-	"include": ["src/**/*.ts"],
-	"exclude": ["node_modules"]
+        // Interop Constraints
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": false,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"]
 }
