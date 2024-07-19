@@ -30,6 +30,9 @@ importers:
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
+      discord-api-types:
+        specifier: ^0.37.92
+        version: 0.37.92
       eslint:
         specifier: ^9.7.0
         version: 9.7.0
@@ -42,6 +45,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.2.1
         version: 5.2.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@9.7.0))(eslint@9.7.0)(prettier@3.3.3)
+      lavalink-api-types:
+        specifier: ^2.0.2
+        version: 2.0.2
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -775,6 +781,9 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
+  discord-api-types@0.37.92:
+    resolution: {integrity: sha512-7xnedbQRLRef/O+4jKPyIFwl6YqoyihOG3OSneiRmVJMBk30ph2YuZGcHjeX1Kk/a3yQWeyCKe4RZJB3iECcxg==}
+
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
@@ -1355,6 +1364,10 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
+
+  lavalink-api-types@2.0.2:
+    resolution: {integrity: sha512-weRuYSdiEMNnJeQYqbl/SmX0ZApNn0xR5xF3c/1vJvJ6T07fK5R6nL82IC0nNJjDLq9hUl0b9KJIAKCokM3Lng==}
+    engines: {node: '>=20.0.0', npm: '>=7.0.0'}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -2690,6 +2703,8 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
+  discord-api-types@0.37.92: {}
+
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
@@ -3409,6 +3424,8 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  lavalink-api-types@2.0.2: {}
 
   levn@0.4.1:
     dependencies:

@@ -1,11 +1,21 @@
-/* eslint-disable typescript/no-unsafe-argument, typescript/no-unsafe-assignment, typescript/no-unsafe-member-access, typescript/no-non-null-assertion, typescript/no-shadow, typescript/naming-convention, tsdoc/syntax, no-await-in-loop, no-param-reassign */
+/* eslint-disable typescript/no-unsafe-assignment, typescript/no-non-null-assertion, typescript/no-shadow, typescript/naming-convention, tsdoc/syntax, no-await-in-loop, no-param-reassign */
 import { Buffer } from "node:buffer";
 import type { IncomingMessage } from "node:http";
 import { setTimeout } from "node:timers";
 import { URL } from "node:url";
+import type { EventPayload, ReadyPayload } from "lavalink-api-types/v4";
+import { WebSocketOp } from "lavalink-api-types/v4";
 import Websocket from "ws";
-import { OpCodes, State, VoiceState, RedisKey } from "../Constants";
+import { State, VoiceState, RedisKey } from "../Constants";
 import type { NodeOption, Esbatu, VoiceChannelOptions } from "../Esbatu";
+import type {
+    PlayerUpdatePayload,
+    TrackEndEventPayload,
+    TrackExceptionEventPayload,
+    TrackStartEventPayload,
+    TrackStuckEventPayload,
+    WebSocketClosedEventPayload
+} from "../guild/Player";
 import { Player } from "../guild/Player";
 import { VoiceConnection } from "../guild/VoiceConnection";
 import { Rest } from "./Rest";
@@ -72,6 +82,7 @@ type ResumableHeaders = {
 };
 
 type NonResumableHeaders = Omit<ResumableHeaders, "Session-Id"> & {};
+type StatsPayload = NodeStats & { op: WebSocketOp.Stats };
 
 /**
  * Represents a Lavalink node.
@@ -430,22 +441,23 @@ export class Node {
      * @private
      * @internal
      */
-    // eslint-disable-next-line consistent-return
     private async message(message: Websocket.RawData): Promise<void> {
         if (Array.isArray(message)) message = Buffer.concat(message);
         if (message instanceof ArrayBuffer) message = Buffer.from(message);
 
-        // eslint-disable-next-line typescript/no-base-to-string
-        const data = JSON.parse(message.toString());
+        const data: EventPayload | PlayerUpdatePayload | ReadyPayload | StatsPayload | undefined = JSON.parse(
+            // eslint-disable-next-line typescript/no-base-to-string
+            message.toString()
+        );
 
-        // eslint-disable-next-line typescript/strict-boolean-expressions
         if (!data) return undefined;
         if (this.destroyed || this.state === State.Reconnecting) return undefined;
 
         this.manager.emit("raw", this.name, data);
 
         switch (data.op) {
-            case OpCodes.Stats:
+            case WebSocketOp.Stats:
+                // @ts-expect-error ignore this ts(2790)
                 delete data.op;
 
                 this.stats = data;
@@ -456,7 +468,7 @@ export class Node {
                 );
 
                 break;
-            case OpCodes.Ready: {
+            case WebSocketOp.Ready: {
                 this.state = State.Connected;
                 this.sessionId = data.sessionId;
 
@@ -493,10 +505,9 @@ export class Node {
 
                 if (this.manager.options.resume) {
                     try {
-                        await this.manager.redis?.set(RedisKey.NodeSession(this.name.toLowerCase()), this.sessionId!);
+                        await this.manager.redis?.set(RedisKey.NodeSession(this.name.toLowerCase()), this.sessionId);
                         await this.rest.updateSession(this.manager.options.resume, this.manager.options.resumeTimeout);
 
-                        // eslint-disable-next-line typescript/strict-boolean-expressions
                         if (data.resumed) {
                             const IDataCache = await this.manager.redis?.get(
                                 RedisKey.NodePlayers(this.name.toLowerCase())
@@ -538,19 +549,32 @@ export class Node {
 
                 break;
             }
-            case OpCodes.Event:
-            case OpCodes.PlayerUpdate: {
+            case WebSocketOp.Event:
+            case WebSocketOp.PlayerUpdate: {
                 const player = this.manager.players.get(data.guildId);
 
                 if (!player) return undefined;
-                if (data.op === OpCodes.Event) player.onPlayerEvent(data);
+                if (data.op === WebSocketOp.Event)
+                    player.onPlayerEvent(
+                        data as
+                            | TrackEndEventPayload
+                            | TrackExceptionEventPayload
+                            | TrackStartEventPayload
+                            | TrackStuckEventPayload
+                            | WebSocketClosedEventPayload
+                    );
                 else player.onPlayerUpdate(data);
 
                 break;
             }
             default:
-                this.manager.emit("debug", `[WS => ${this.name}] Unknown opcodes message, type: ${data.op}.`);
+                this.manager.emit(
+                    "debug",
+                    `[WS => ${this.name}] Unknown opcodes message, type: ${data as unknown as string}.`
+                );
         }
+
+        return undefined;
     }
 
     /**

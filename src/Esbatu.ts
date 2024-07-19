@@ -1,5 +1,7 @@
-/* eslint-disable typescript/no-unsafe-member-access, typescript/no-unsafe-argument, typescript/no-unsafe-assignment, tsdoc/syntax */
+/* eslint-disable tsdoc/syntax */
 import { EventEmitter } from "node:events";
+import type { GatewayVoiceServerUpdateDispatch, GatewayVoiceStateUpdateDispatch } from "discord-api-types/v10";
+import { GatewayDispatchEvents } from "discord-api-types/v10";
 import type { Redis } from "ioredis";
 import { name as packageName, version as packageVersion } from "../package.json";
 import { State, VoiceState } from "./Constants";
@@ -231,17 +233,18 @@ export abstract class Esbatu extends EventEmitter {
      *
      * @param packet Packet instance from Discord Gateway.
      */
-    // eslint-disable-next-line consistent-return, typescript/explicit-module-boundary-types
-    public updateInstance(packet: any): void {
-        const guildId = packet.d.guild_id;
+    public updateInstance(packet: GatewayVoiceServerUpdateDispatch | GatewayVoiceStateUpdateDispatch): void {
+        const guildId = packet.d.guild_id ?? "";
         const connection = this.connections.get(guildId);
-        const AllowedPackets = ["VOICE_STATE_UPDATE", "VOICE_SERVER_UPDATE"];
+        const AllowedPackets: GatewayDispatchEvents[] = [
+            GatewayDispatchEvents.VoiceStateUpdate,
+            GatewayDispatchEvents.VoiceServerUpdate
+        ];
 
         if (!connection || !AllowedPackets.includes(packet.t)) return undefined;
 
-        if (packet.t === "VOICE_SERVER_UPDATE") {
-            // eslint-disable-next-line typescript/strict-boolean-expressions
-            if (!packet.d.endpoint) {
+        if (packet.t === GatewayDispatchEvents.VoiceServerUpdate) {
+            if (packet.d.endpoint === null) {
                 connection.emit("connectionUpdate", VoiceState.SessionEndpointMissing);
 
                 return undefined;
@@ -253,9 +256,12 @@ export abstract class Esbatu extends EventEmitter {
             }
 
             connection.lastRegion = connection.region?.repeat(1) ?? null;
-            // eslint-disable-next-line typescript/no-unsafe-call
             connection.region = packet.d.endpoint.split(".").shift()?.replace(/\d/gu, "") ?? null;
-            connection.serverUpdate = packet.d;
+
+            connection.serverUpdate = {
+                token: packet.d.token,
+                endpoint: packet.d.endpoint
+            };
 
             if (connection.region !== null && connection.lastRegion !== connection.region) {
                 this.emit(
@@ -278,7 +284,7 @@ export abstract class Esbatu extends EventEmitter {
         connection.channelId = packet.d.channel_id;
         connection.deafened = packet.d.self_deaf;
         connection.muted = packet.d.self_mute;
-        connection.sessionId = packet.d.session_id ?? null;
+        connection.sessionId = packet.d.session_id;
 
         if (connection.channelId !== null && connection.lastChannelId !== connection.channelId) {
             this.emit(
@@ -299,6 +305,8 @@ export abstract class Esbatu extends EventEmitter {
             "debug",
             `[VOICE => DISCORD] State update received, session: ${connection.sessionId}, guild: ${guildId}.`
         );
+
+        return undefined;
     }
 
     /**
@@ -306,8 +314,7 @@ export abstract class Esbatu extends EventEmitter {
      *
      * @abstract
      */
-    // eslint-disable-next-line typescript/explicit-module-boundary-types
-    public abstract sendPacket(shardId: number, payload: any, important: boolean): void;
+    public abstract sendPacket(shardId: number, payload: unknown, important: boolean): void;
 }
 
 // @ts-expect-error ignore this ts(2300)

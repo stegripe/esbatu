@@ -1,19 +1,12 @@
-/* eslint-disable jsdoc/check-param-names, tsdoc/syntax */
+/* eslint-disable tsdoc/syntax */
 import { EventEmitter } from "node:events";
-import type { OpCodes } from "../Constants";
+import type { PlayerUpdatePayload as IPlayerUpdatePayload, WebSocketOp } from "lavalink-api-types/v4";
+import { WebSocketType } from "lavalink-api-types/v4";
 import { RedisKey, State } from "../Constants";
 import type { VoiceChannelOptions } from "../Esbatu";
 import type { Exception, Track } from "../node/Rest";
 import type { Node } from "../node/index";
 import type { VoiceConnection } from "./VoiceConnection";
-
-export type TrackEndReason = "cleanup" | "finished" | "loadFailed" | "replaced" | "stopped";
-export type PlayerEventType =
-    | "TrackEndEvent"
-    | "TrackExceptionEvent"
-    | "TrackStartEvent"
-    | "TrackStuckEvent"
-    | "WebSocketClosedEvent";
 
 export type PlayOptions = {
     track: string;
@@ -74,50 +67,67 @@ export type LowPassSettings = {
     smoothing?: number;
 };
 
-export type PlayerEvent = {
-    op: OpCodes.Event;
-    type: PlayerEventType;
+export type EventPayload = {
+    op: WebSocketOp.Event;
     guildId: string;
+    type: WebSocketType;
 };
 
-export type TrackStartEvent = PlayerEvent & {
-    type: "TrackStartEvent";
+export type TrackStartEventPayload = EventPayload & {
+    type: WebSocketType.TrackStartEvent;
     track: Track;
 };
 
-export type TrackEndEvent = PlayerEvent & {
-    type: "TrackEndEvent";
+export type TrackEndEventPayload = EventPayload & {
+    type: WebSocketType.TrackEndEvent;
     track: Track | null;
     reason: TrackEndReason;
 };
 
-export type TrackStuckEvent = PlayerEvent & {
-    type: "TrackStuckEvent";
+export enum TrackEndReason {
+    Finished = "finished",
+    LoadFailed = "loadFailed",
+    Stopped = "stopped",
+    Replaced = "replaced",
+    Cleanup = "cleanup"
+}
+
+export type TrackStuckEventPayload = EventPayload & {
+    type: WebSocketType.TrackStuckEvent;
     track: Track;
     thresholdMs: number;
 };
 
-export type TrackExceptionEvent = PlayerEvent & {
-    type: "TrackExceptionEvent";
+export type TrackExceptionEventPayload = EventPayload & {
+    type: WebSocketType.TrackExceptionEvent;
+    track: Track;
     exception: Exception;
 };
 
-export type WebSocketClosedEvent = PlayerEvent & {
-    type: "WebSocketClosedEvent";
-    code: number;
+export type WebSocketClosedEventPayload = EventPayload & {
+    type: WebSocketType.WebSocketClosedEvent;
+    code: WebsocketCloseCode;
     reason: string;
     byRemote: boolean;
 };
 
-export type PlayerUpdate = {
-    op: OpCodes.PlayerUpdate;
-    state: {
-        time: number;
-        position: number;
-        connected: boolean;
-        ping: number;
-    };
-};
+export enum WebsocketCloseCode {
+    UnknownError = 4_000,
+    UnknownOpCode = 4_001,
+    DecodeError = 4_002,
+    NotAuthenticated = 4_003,
+    AuthenticatedError = 4_004,
+    AlreadyAuthenticated = 4_005,
+    SessionInvalid = 4_006,
+    SessionTimeout = 4_009,
+    ServerNotFound = 4_011,
+    UnknownProtocol = 4_012,
+    Disconnected = 4_014,
+    VoiceServerCrashed = 4_015,
+    UnknownEncryptionMode = 4_016
+}
+
+export type PlayerUpdatePayload = IPlayerUpdatePayload & { guildId: string };
 
 export type FilterOptions = {
     volume?: number;
@@ -588,7 +598,7 @@ export class Player extends EventEmitter {
      *
      * @internal
      */
-    public onPlayerUpdate(data: { state: { position: number; ping: number; connected: boolean } }): void {
+    public onPlayerUpdate(data: PlayerUpdatePayload): void {
         if (this._prepareMove) return undefined;
 
         const { position, ping, connected } = data.state;
@@ -608,37 +618,44 @@ export class Player extends EventEmitter {
      * @param data JSON data from Lavalink.
      * @internal
      */
-    public onPlayerEvent(data: { type: string; track: Track }): void {
+    public onPlayerEvent(
+        data:
+            | TrackEndEventPayload
+            | TrackExceptionEventPayload
+            | TrackStartEventPayload
+            | TrackStuckEventPayload
+            | WebSocketClosedEventPayload
+    ): void {
         if (this._prepareMove) return undefined;
 
         switch (data.type) {
-            case "TrackStartEvent":
+            case WebSocketType.TrackStartEvent:
                 this.trackIdentifier = data.track.info.identifier;
                 this._encodedTrack = data.track.encoded;
 
                 this.emit("start", data);
 
                 break;
-            case "TrackEndEvent":
+            case WebSocketType.TrackEndEvent:
                 this.emit("end", data);
 
                 break;
-            case "TrackStuckEvent":
+            case WebSocketType.TrackStuckEvent:
                 this.emit("stuck", data);
 
                 break;
-            case "TrackExceptionEvent":
+            case WebSocketType.TrackExceptionEvent:
                 this.emit("exception", data);
 
                 break;
-            case "WebSocketClosedEvent":
+            case WebSocketType.WebSocketClosedEvent:
                 this.emit("closed", data);
 
                 break;
             default:
                 this.node.manager.emit(
                     "debug",
-                    `[PLAYER => ${this.node.name}] Unknown player message, type: ${data.type}, guild: ${this.guildId}.`
+                    `[PLAYER => ${this.node.name}] Unknown player message, type: ${data as unknown as string}, guild: ${this.guildId}.`
                 );
         }
 
@@ -649,11 +666,11 @@ export class Player extends EventEmitter {
 // @ts-expect-error ignore this ts(2300)
 // eslint-disable-next-line typescript/no-redeclare
 export declare type Player = {
-    on: ((event: "closed", listener: (reason: WebSocketClosedEvent) => void) => Player) &
-        ((event: "end", listener: (reason: TrackEndEvent) => void) => Player) &
-        ((event: "exception", listener: (reason: TrackExceptionEvent) => void) => Player) &
+    on: ((event: "closed", listener: (reason: WebSocketClosedEventPayload) => void) => Player) &
+        ((event: "end", listener: (reason: TrackEndEventPayload) => void) => Player) &
+        ((event: "exception", listener: (reason: TrackExceptionEventPayload) => void) => Player) &
         ((event: "resumed", listener: (player: Player) => void) => Player) &
-        ((event: "start", listener: (data: TrackStartEvent) => void) => Player) &
-        ((event: "stuck", listener: (data: TrackStuckEvent) => void) => Player) &
-        ((event: "update", listener: (data: PlayerUpdate) => void) => Player);
+        ((event: "start", listener: (data: TrackStartEventPayload) => void) => Player) &
+        ((event: "stuck", listener: (data: TrackStuckEventPayload) => void) => Player) &
+        ((event: "update", listener: (data: PlayerUpdatePayload) => void) => Player);
 };

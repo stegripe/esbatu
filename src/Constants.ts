@@ -15,13 +15,6 @@ export enum VoiceState {
     SessionFailedUpdate = 3
 }
 
-export enum OpCodes {
-    PlayerUpdate = "playerUpdate",
-    Stats = "stats",
-    Event = "event",
-    Ready = "ready"
-}
-
 export const RedisKey = {
     NodeSession: (name: string) => `esbatu:node:${name}:session`,
     NodePlayers: (name: string) => `esbatu:node:${name}:players`
