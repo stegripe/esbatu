@@ -1,7 +1,7 @@
 {
     "entry": ["src/index.ts"],
-    "platform": "node",
     "format": ["esm", "cjs"],
+    "platform": "node",
     "target": "es2022",
     "skipNodeModulesBundle": true,
     "clean": true,

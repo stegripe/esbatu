@@ -2,6 +2,16 @@
     "name": "esbatu",
     "version": "1.0.0-dev",
     "description": "Esbatu surpasses Lavalink with superior stability, frequent updates, extended capabilities, and efficient Redis caching, offering a reliable music streaming experience.",
+    "license": "AGPL-3.0",
+    "author": "Stegripe Development <support@stegripe.org>",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/stegripe/esbatu.git"
+    },
+    "bugs": {
+        "url": "https://github.com/stegripe/esbatu/issues"
+    },
+    "homepage": "https://github.com/stegripe/esbatu#readme",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
@@ -12,18 +22,27 @@
         "lint": "prettier --check . && cross-env TIMING=1 eslint --format=pretty src",
         "prepack": "pnpm lint && pnpm build"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/stegripe/esbatu.git"
+    "exports": {
+        ".": {
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
+            },
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            }
+        }
     },
-    "author": "Stegripe Development <support@stegripe.org>",
-    "license": "AGPL-3.0",
-    "bugs": {
-        "url": "https://github.com/stegripe/esbatu/issues"
-    },
-    "homepage": "https://github.com/stegripe/esbatu#readme",
+    "files": [
+        "dist"
+    ],
     "engines": {
         "node": ">=18.x"
+    },
+    "dependencies": {
+        "undici": "^6.19.2",
+        "ws": "^8.18.0"
     },
     "devDependencies": {
         "@stegripe/eslint-config": "^1.0.0",
@@ -41,10 +60,6 @@
         "typedoc": "^0.26.4",
         "typescript": "^5.5.3"
     },
-    "dependencies": {
-        "undici": "^6.19.2",
-        "ws": "^8.18.0"
-    },
     "peerDependencies": {
         "ioredis": ">=5.4.1"
     },
@@ -52,20 +67,5 @@
         "ioredis": {
             "optional": true
         }
-    },
-    "exports": {
-        ".": {
-            "require": {
-                "types": "./dist/index.d.ts",
-                "default": "./dist/index.js"
-            },
-            "import": {
-                "types": "./dist/index.d.mts",
-                "default": "./dist/index.mjs"
-            }
-        }
-    },
-    "files": [
-        "dist"
-    ]
+    }
 }
