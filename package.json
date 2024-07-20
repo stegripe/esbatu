@@ -1,6 +1,6 @@
 {
     "name": "esbatu",
-    "version": "1.0.0-dev",
+    "version": "1.0.0",
     "description": "Esbatu surpasses Lavalink with superior stability, frequent updates, extended capabilities, and efficient Redis caching, offering a reliable music streaming experience.",
     "license": "AGPL-3.0",
     "author": "Stegripe Development <support@stegripe.org>",
