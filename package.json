@@ -20,7 +20,8 @@
         "build:docs": "typedoc --theme default --readme README.md --out docs/ --entryPointStrategy expand src/.",
         "format": "prettier --write . && cross-env TIMING=1 eslint --fix --format=pretty src",
         "lint": "prettier --check . && cross-env TIMING=1 eslint --format=pretty src",
-        "prepack": "pnpm lint && pnpm build"
+        "prepack": "pnpm lint && pnpm build",
+        "release": "pnpm publish --access public --no-git-checks"
     },
     "exports": {
         ".": {
