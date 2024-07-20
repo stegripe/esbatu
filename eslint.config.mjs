@@ -1,4 +1,4 @@
-import { common, modules, node, prettier, typescript, extend } from "@stegripe/eslint-config";
+import { common, modules, node, prettier, typescript, ignores } from "@stegripe/eslint-config";
 
 export default [
     ...common,
@@ -23,5 +23,6 @@ export default [
                 }
             ]
         }
-    ])
+    ]),
+    ...ignores
 ];
