@@ -1,4 +1,4 @@
-/* eslint-disable typescript/no-unsafe-assignment, typescript/no-non-null-assertion, typescript/no-shadow, typescript/naming-convention, tsdoc/syntax, no-await-in-loop, no-param-reassign */
+/* eslint-disable typescript/no-unsafe-assignment, typescript/naming-convention, typescript/no-shadow, tsdoc/syntax, no-await-in-loop, no-param-reassign */
 import { Buffer } from "node:buffer";
 import type { IncomingMessage } from "node:http";
 import { setTimeout } from "node:timers";
@@ -20,7 +20,7 @@ import { Player } from "../guild/Player";
 import { VoiceConnection } from "../guild/VoiceConnection";
 import { Rest } from "./Rest";
 
-export type NodeStats = {
+export interface NodeStats {
     players: number;
     playingPlayers: number;
     memory: {
@@ -40,9 +40,9 @@ export type NodeStats = {
         lavalinkLoad: number;
     };
     uptime: number;
-};
+}
 
-export type NodeInfo = {
+export interface NodeInfo {
     version: NodeInfoVersion;
     buildTime: number;
     git: NodeInfoGit;
@@ -51,35 +51,35 @@ export type NodeInfo = {
     sourceManagers: string[];
     filters: string[];
     plugins: NodeInfoPlugin[];
-};
+}
 
-export type NodeInfoVersion = {
+export interface NodeInfoVersion {
     semver: string;
     major: number;
     minor: number;
     patch: number;
     preRelease: string | null;
     build: string | null;
-};
+}
 
-export type NodeInfoGit = {
+export interface NodeInfoGit {
     branch: string;
     commit: string;
     commitTime: number;
-};
+}
 
-export type NodeInfoPlugin = {
+export interface NodeInfoPlugin {
     name: string;
     version: string;
-};
+}
 
-type ResumableHeaders = {
+interface ResumableHeaders {
     "Client-Name": string;
     "User-Agent": string;
     Authorization: string;
     "User-Id": string;
     "Session-Id": string;
-};
+}
 
 type NonResumableHeaders = Omit<ResumableHeaders, "Session-Id"> & {};
 type StatsPayload = NodeStats & { op: WebSocketOp.Stats };

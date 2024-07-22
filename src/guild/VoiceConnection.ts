@@ -1,20 +1,14 @@
-/* eslint-disable tsdoc/syntax, id-length */
+/* eslint-disable tsdoc/syntax */
 import { EventEmitter, once } from "node:events";
 import { setTimeout, clearTimeout } from "node:timers";
+import { GatewayOpcodes } from "discord-api-types/v10";
 import { State, VoiceState } from "../Constants";
 import type { Esbatu, VoiceChannelOptions } from "../Esbatu";
 
-export type StateUpdatePartial = {
-    session_id?: string;
-    channel_id: string | null;
-    self_deaf: boolean;
-    self_mute: boolean;
-};
-
-export type ServerUpdate = {
+export interface ServerUpdate {
     token: string;
     endpoint: string;
-};
+}
 
 /**
  * Represents a connection to a Discord voice channel.
@@ -104,7 +98,7 @@ export class VoiceConnection extends EventEmitter {
     public setDeaf(deaf = true): void {
         this.deafened = deaf;
 
-        this.sendVoiceUpdate();
+        this.sendVoiceStateUpdate();
     }
 
     /**
@@ -116,7 +110,7 @@ export class VoiceConnection extends EventEmitter {
     public setMute(mute = false): void {
         this.muted = mute;
 
-        this.sendVoiceUpdate();
+        this.sendVoiceStateUpdate();
     }
 
     /**
@@ -131,7 +125,7 @@ export class VoiceConnection extends EventEmitter {
         this.state = State.Disconnected;
 
         this.removeAllListeners();
-        this.sendVoiceUpdate();
+        this.sendVoiceStateUpdate();
 
         this.manager.emit("debug", `[VOICE => NODE & DISCORD] Connection destroyed, guild: ${this.guildId}.`);
 
@@ -148,7 +142,7 @@ export class VoiceConnection extends EventEmitter {
 
         this.state = State.Connecting;
 
-        this.sendVoiceUpdate();
+        this.sendVoiceStateUpdate();
         this.manager.emit("debug", `[VOICE => DISCORD] Requesting connection, guild: ${this.guildId}.`);
 
         const controller = new AbortController();
@@ -191,11 +185,12 @@ export class VoiceConnection extends EventEmitter {
      *
      * @internal
      */
-    public sendVoiceUpdate(): void {
+    public sendVoiceStateUpdate(): void {
         this.manager.sendPacket(
             this.shardId,
             {
-                op: 4,
+                op: GatewayOpcodes.VoiceStateUpdate,
+                // eslint-disable-next-line id-length
                 d: {
                     guild_id: this.guildId,
                     channel_id: this.channelId,

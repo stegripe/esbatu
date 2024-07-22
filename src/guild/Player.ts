@@ -8,82 +8,6 @@ import type { Exception, Track } from "../node/Rest";
 import type { Node } from "../node/index";
 import type { VoiceConnection } from "./VoiceConnection";
 
-export type PlayOptions = {
-    track: string;
-    options?: {
-        noReplace?: boolean;
-        pause?: boolean;
-        startTime?: number;
-        endTime?: number;
-    };
-};
-
-export type Band = {
-    band: number;
-    gain: number;
-};
-
-export type KaraokeSettings = {
-    level?: number;
-    monoLevel?: number;
-    filterBand?: number;
-    filterWidth?: number;
-};
-
-export type TimescaleSettings = {
-    speed?: number;
-    pitch?: number;
-    rate?: number;
-};
-
-export type FreqSettings = {
-    frequency?: number;
-    depth?: number;
-};
-
-export type RotationSettings = {
-    rotationHz?: number;
-};
-
-export type DistortionSettings = {
-    sinOffset?: number;
-    sinScale?: number;
-    cosOffset?: number;
-    cosScale?: number;
-    tanOffset?: number;
-    tanScale?: number;
-    offset?: number;
-    scale?: number;
-};
-
-export type ChannelMixSettings = {
-    leftToLeft?: number;
-    leftToRight?: number;
-    rightToLeft?: number;
-    rightToRight?: number;
-};
-
-export type LowPassSettings = {
-    smoothing?: number;
-};
-
-export type EventPayload = {
-    op: WebSocketOp.Event;
-    guildId: string;
-    type: WebSocketType;
-};
-
-export type TrackStartEventPayload = EventPayload & {
-    type: WebSocketType.TrackStartEvent;
-    track: Track;
-};
-
-export type TrackEndEventPayload = EventPayload & {
-    type: WebSocketType.TrackEndEvent;
-    track: Track | null;
-    reason: TrackEndReason;
-};
-
 export enum TrackEndReason {
     Finished = "finished",
     LoadFailed = "loadFailed",
@@ -91,25 +15,6 @@ export enum TrackEndReason {
     Replaced = "replaced",
     Cleanup = "cleanup"
 }
-
-export type TrackStuckEventPayload = EventPayload & {
-    type: WebSocketType.TrackStuckEvent;
-    track: Track;
-    thresholdMs: number;
-};
-
-export type TrackExceptionEventPayload = EventPayload & {
-    type: WebSocketType.TrackExceptionEvent;
-    track: Track;
-    exception: Exception;
-};
-
-export type WebSocketClosedEventPayload = EventPayload & {
-    type: WebSocketType.WebSocketClosedEvent;
-    code: WebsocketCloseCode;
-    reason: string;
-    byRemote: boolean;
-};
 
 export enum WebsocketCloseCode {
     UnknownError = 4_000,
@@ -127,9 +32,66 @@ export enum WebsocketCloseCode {
     UnknownEncryptionMode = 4_016
 }
 
-export type PlayerUpdatePayload = IPlayerUpdatePayload & { guildId: string };
+interface PlayOptions {
+    track: string;
+    options?: {
+        noReplace?: boolean;
+        pause?: boolean;
+        startTime?: number;
+        endTime?: number;
+    };
+}
 
-export type FilterOptions = {
+export interface Band {
+    band: number;
+    gain: number;
+}
+
+export interface KaraokeSettings {
+    level?: number;
+    monoLevel?: number;
+    filterBand?: number;
+    filterWidth?: number;
+}
+
+export interface TimescaleSettings {
+    speed?: number;
+    pitch?: number;
+    rate?: number;
+}
+
+export interface FreqSettings {
+    frequency?: number;
+    depth?: number;
+}
+
+export interface RotationSettings {
+    rotationHz?: number;
+}
+
+export interface DistortionSettings {
+    sinOffset?: number;
+    sinScale?: number;
+    cosOffset?: number;
+    cosScale?: number;
+    tanOffset?: number;
+    tanScale?: number;
+    offset?: number;
+    scale?: number;
+}
+
+export interface ChannelMixSettings {
+    leftToLeft?: number;
+    leftToRight?: number;
+    rightToLeft?: number;
+    rightToRight?: number;
+}
+
+export interface LowPassSettings {
+    smoothing?: number;
+}
+
+export interface FilterOptions {
     volume?: number;
     equalizer?: Band[];
     karaoke?: KaraokeSettings | null;
@@ -140,12 +102,61 @@ export type FilterOptions = {
     distortion?: DistortionSettings | null;
     channelMix?: ChannelMixSettings | null;
     lowPass?: LowPassSettings | null;
-};
+}
+
+export interface EventPayload {
+    op: WebSocketOp.Event;
+    guildId: string;
+    type: WebSocketType;
+}
+
+export interface TrackStartEventPayload extends EventPayload {
+    type: WebSocketType.TrackStartEvent;
+    track: Track;
+}
+
+export interface TrackEndEventPayload extends EventPayload {
+    type: WebSocketType.TrackEndEvent;
+    track: Track | null;
+    reason: TrackEndReason;
+}
+
+export interface TrackStuckEventPayload extends EventPayload {
+    type: WebSocketType.TrackStuckEvent;
+    track: Track;
+    thresholdMs: number;
+}
+
+export interface TrackExceptionEventPayload extends EventPayload {
+    type: WebSocketType.TrackExceptionEvent;
+    track: Track;
+    exception: Exception;
+}
+
+export interface WebSocketClosedEventPayload extends EventPayload {
+    type: WebSocketType.WebSocketClosedEvent;
+    code: WebsocketCloseCode;
+    reason: string;
+    byRemote: boolean;
+}
+
+export interface PlayerUpdatePayload extends IPlayerUpdatePayload {
+    guildId: string;
+}
+
+export interface Player extends EventEmitter {
+    on(event: "closed", listener: (reason: WebSocketClosedEventPayload) => void): this;
+    on(event: "end", listener: (reason: TrackEndEventPayload) => void): this;
+    on(event: "exception", listener: (reason: TrackExceptionEventPayload) => void): this;
+    on(event: "resumed", listener: (player: Player) => void): Player;
+    on(event: "start", listener: (data: TrackStartEventPayload) => void): this;
+    on(event: "stuck", listener: (data: TrackStuckEventPayload) => void): this;
+    on(event: "update", listener: (data: PlayerUpdatePayload) => void): this;
+}
 
 /**
  * Wrapper object around Lavalink.
  */
-// @ts-expect-error ignore this ts(2300)
 export class Player extends EventEmitter {
     /**
      * A Guild id on this player.
@@ -219,7 +230,6 @@ export class Player extends EventEmitter {
      * @readonly
      */
     public get connection(): VoiceConnection {
-        // eslint-disable-next-line typescript/no-non-null-assertion
         return this.node.manager.connections.get(this.guildId)!;
     }
 
@@ -235,7 +245,6 @@ export class Player extends EventEmitter {
                 .filter(node0 => node0.name !== this.node.name && node0.state === State.Connected)
                 .sort((a, b) => a.penalties - b.penalties)
                 .shift();
-        // eslint-disable-next-line typescript/no-non-null-assertion
         const node = this.node.manager.nodes.get(name!) ?? idealExcludeCurrentNode();
 
         if (!node || node.name === this.node.name) return false;
@@ -252,7 +261,6 @@ export class Player extends EventEmitter {
             ICurrentDataCache === null ? [] : (JSON.parse(ICurrentDataCache ?? "") as VoiceChannelOptions[]);
 
         currentDataCache.splice(
-            // eslint-disable-next-line typescript/no-non-null-assertion
             currentDataCache.indexOf(currentDataCache.find(({ guildId: id }) => id === this.guildId)!),
             1
         );
@@ -273,7 +281,6 @@ export class Player extends EventEmitter {
 
             dataCache.push({
                 guildId: this.guildId,
-                // eslint-disable-next-line typescript/no-non-null-assertion
                 channelId: this.connection.channelId!,
                 shardId: this.connection.shardId,
                 deaf: this.connection.deafened,
@@ -290,7 +297,6 @@ export class Player extends EventEmitter {
 
             return true;
         } catch {
-            // eslint-disable-next-line typescript/no-non-null-assertion
             this.node = lastNode!;
 
             const IDataCache = await this.node.manager.redis?.get(RedisKey.NodePlayers(this.node.name.toLowerCase()));
@@ -298,7 +304,6 @@ export class Player extends EventEmitter {
 
             dataCache.push({
                 guildId: this.guildId,
-                // eslint-disable-next-line typescript/no-non-null-assertion
                 channelId: this.connection.channelId!,
                 shardId: this.connection.shardId,
                 deaf: this.connection.deafened,
@@ -547,7 +552,7 @@ export class Player extends EventEmitter {
             }
         });
 
-        if (!state.connected) this.connection.sendVoiceUpdate();
+        if (!state.connected) this.connection.sendVoiceStateUpdate();
     }
 
     /**
@@ -662,15 +667,3 @@ export class Player extends EventEmitter {
         return undefined;
     }
 }
-
-// @ts-expect-error ignore this ts(2300)
-// eslint-disable-next-line typescript/no-redeclare
-export declare type Player = {
-    on: ((event: "closed", listener: (reason: WebSocketClosedEventPayload) => void) => Player) &
-        ((event: "end", listener: (reason: TrackEndEventPayload) => void) => Player) &
-        ((event: "exception", listener: (reason: TrackExceptionEventPayload) => void) => Player) &
-        ((event: "resumed", listener: (player: Player) => void) => Player) &
-        ((event: "start", listener: (data: TrackStartEventPayload) => void) => Player) &
-        ((event: "stuck", listener: (data: TrackStuckEventPayload) => void) => Player) &
-        ((event: "update", listener: (data: PlayerUpdatePayload) => void) => Player);
-};

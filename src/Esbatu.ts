@@ -1,6 +1,10 @@
 /* eslint-disable tsdoc/syntax */
 import { EventEmitter } from "node:events";
-import type { GatewayVoiceServerUpdateDispatch, GatewayVoiceStateUpdateDispatch } from "discord-api-types/v10";
+import type {
+    GatewayVoiceServerUpdateDispatch,
+    GatewayVoiceStateUpdate,
+    GatewayVoiceStateUpdateDispatch
+} from "discord-api-types/v10";
 import { GatewayDispatchEvents } from "discord-api-types/v10";
 import type { Redis } from "ioredis";
 import { name as packageName, version as packageVersion } from "../package.json";
@@ -10,7 +14,7 @@ import type { VoiceConnection } from "./guild/VoiceConnection";
 import type { Rest } from "./node/Rest";
 import { Node } from "./node/index";
 
-export type VoiceChannelOptions = {
+export interface VoiceChannelOptions {
     /**
      * A id of Guild in which the {@link VoiceChannelOptions.channelId} of the voice channel is located.
      */
@@ -31,9 +35,9 @@ export type VoiceChannelOptions = {
      * Whether to mute or unmute the current bot user.
      */
     deaf?: boolean;
-};
+}
 
-export type NodeOption = {
+export interface NodeOption {
     /**
      * Name of this node.
      */
@@ -50,9 +54,9 @@ export type NodeOption = {
      * Whether to use secure protocols or not.
      */
     secure?: boolean;
-};
+}
 
-export type EsbatuOptions = {
+export interface EsbatuOptions {
     /**
      * Whether to move players to a different Lavalink node when a node disconnect.
      */
@@ -101,11 +105,9 @@ export type EsbatuOptions = {
      * Timeout before abort the voice connection.
      */
     voiceConnectionTimeout?: number;
-};
+}
 
-type Constructor<T> = new (...args: any[]) => T;
-
-export type Structures = {
+export interface Structures {
     /**
      * A custom structure that extends the {@link Rest} class.
      */
@@ -114,12 +116,26 @@ export type Structures = {
      * A custom structure that extends the {@link Player} class.
      */
     player?: Constructor<Player>;
-};
+}
+
+type Constructor<T> = new (...args: any[]) => T;
+
+export interface Esbatu extends EventEmitter {
+    on(
+        event: "reconnecting",
+        listener: (name: string, reconnectsLeft: number, reconnectInterval: number) => void
+    ): this;
+    on(event: "close", listener: (name: string, code: number, reason: string) => void): this;
+    on(event: "debug", listener: (debug: string) => void): this;
+    on(event: "disconnect", listener: (name: string, count: number) => void): this;
+    on(event: "error", listener: (name: string, error: Error) => void): this;
+    on(event: "raw", listener: (name: string, data: unknown) => void): this;
+    on(event: "ready", listener: (name: string, reconnected: boolean) => void): this;
+}
 
 /**
  * Main Esbatu class.
  */
-// @ts-expect-error ignore this ts(2300)
 export abstract class Esbatu extends EventEmitter {
     /**
      * A Esbatu options.
@@ -314,20 +330,5 @@ export abstract class Esbatu extends EventEmitter {
      *
      * @abstract
      */
-    public abstract sendPacket(shardId: number, payload: unknown, important: boolean): void;
+    public abstract sendPacket(shardId: number, payload: GatewayVoiceStateUpdate, important: boolean): void;
 }
-
-// @ts-expect-error ignore this ts(2300)
-// eslint-disable-next-line typescript/no-redeclare
-export type Esbatu = EventEmitter & {
-    on: ((
-        event: "reconnecting",
-        listener: (name: string, reconnectsLeft: number, reconnectInterval: number) => void
-    ) => Esbatu) &
-        ((event: "close", listener: (name: string, code: number, reason: string) => void) => Esbatu) &
-        ((event: "debug", listener: (debug: string) => void) => Esbatu) &
-        ((event: "disconnect", listener: (name: string, count: number) => void) => Esbatu) &
-        ((event: "error", listener: (name: string, error: Error) => void) => Esbatu) &
-        ((event: "raw", listener: (name: string, data: unknown) => void) => Esbatu) &
-        ((event: "ready", listener: (name: string, reconnected: boolean) => void) => Esbatu);
-};

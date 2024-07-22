@@ -1,4 +1,3 @@
-/* eslint-disable typescript/explicit-module-boundary-types */
 export enum State {
     Connecting = 0,
     Nearly = 1,
@@ -16,6 +15,6 @@ export enum VoiceState {
 }
 
 export const RedisKey = {
-    NodeSession: (name: string) => `esbatu:node:${name}:session`,
-    NodePlayers: (name: string) => `esbatu:node:${name}:players`
+    NodeSession: (name: string): string => `esbatu:node:${name}:session`,
+    NodePlayers: (name: string): string => `esbatu:node:${name}:players`
 };

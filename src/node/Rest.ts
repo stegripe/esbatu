@@ -14,95 +14,114 @@ export enum LoadType {
     Error = "error"
 }
 
-export type Track = {
-    encoded: string;
-    info: {
-        identifier: string;
-        isSeekable: boolean;
-        author: string;
-        length: number;
-        isStream: boolean;
-        position: number;
-        title: string;
-        uri: string | null;
-        artworkUrl: string | null;
-        isrc: string | null;
-        sourceName: string;
-    };
-    pluginInfo: object;
-};
+export enum Severity {
+    Common = "common",
+    Fault = "fault",
+    Suspicious = "suspicious"
+}
 
-export type Playlist = {
+export enum RoutePlannerClass {
+    RotatingIpRoutePlanner = "RotatingIpRoutePlanner",
+    NanoIpRoutePlanner = "NanoIpRoutePlanner",
+    RotatingNanoIpRoutePlanner = "RotatingNanoIpRoutePlanner",
+    BalancingIpRoutePlanner = "BalancingIpRoutePlanner"
+}
+
+export enum IpBlockType {
+    INet6Address = "Inet6Address",
+    INet4Address = "Inet4Address"
+}
+
+export interface Track {
+    encoded: string;
+    info: TrackInfo;
+    pluginInfo: object;
+    userData: object;
+}
+
+export interface TrackInfo {
+    identifier: string;
+    isSeekable: boolean;
+    author: string;
+    length: number;
+    isStream: boolean;
+    position: number;
+    title: string;
+    uri: string | null;
+    artworkUrl: string | null;
+    isrc: string | null;
+    sourceName: string;
+}
+
+export interface Playlist {
     info: {
         name: string;
         selectedTrack: number;
     };
     tracks: Track[];
     pluginInfo: object;
-};
+}
 
-export type Exception = {
+export interface Exception {
     message: string;
     severity: Severity;
     cause: string;
-};
+}
 
-export type Severity = "common" | "fault" | "suspicious";
-export type LavalinkResponse = EmptyResult | ErrorResult | PlaylistResult | SearchResult | TrackResult;
-
-export type TrackResult = {
+export interface TrackResult {
     loadType: LoadType.Track;
     data: Track;
-};
+}
 
-export type PlaylistResult = {
+export interface PlaylistResult {
     loadType: LoadType.Playlist;
     data: Playlist;
-};
+}
 
-export type SearchResult = {
+export interface SearchResult {
     loadType: LoadType.Search;
     data: Track[];
-};
+}
 
-export type EmptyResult = {
+export interface EmptyResult {
     loadType: LoadType.Empty;
     data: null;
-};
+}
 
-export type ErrorResult = {
+export interface ErrorResult {
     loadType: LoadType.Error;
     data: Exception;
-};
+}
 
-export type Address = {
-    address: string;
+type LavalinkResponse = EmptyResult | ErrorResult | PlaylistResult | SearchResult | TrackResult;
+
+export interface RoutePlanner {
+    class: RoutePlannerClass | null;
+    details: RoutePlannerDetails | null;
+}
+
+export interface RoutePlannerDetails {
+    ipBlock: IpBlock;
+    failingAddresses: FailingAddresses[];
+    rotateIndex: string;
+    ipIndex: string;
+    currentAddress: string;
+    currentAddressIndex: string;
+    blockIndex: string;
+}
+
+export interface IpBlock {
+    type: IpBlockType;
+    size: string;
+}
+
+export interface FailingAddresses {
+    fallingAddress: string;
     failingTimestamp: number;
     failingTime: string;
-};
+}
 
-export type RoutePlanner = {
-    class:
-        | "BalancingIpRoutePlanner"
-        | "NanoIpRoutePlanner"
-        | "RotatingIpRoutePlanner"
-        | "RotatingNanoIpRoutePlanner"
-        | null;
-    details: {
-        ipBlock: {
-            type: string;
-            size: string;
-        };
-        failingAddresses: Address[];
-        rotateIndex: string;
-        ipIndex: string;
-        currentAddress: string;
-        blockIndex: string;
-        currentAddressIndex: string;
-    } | null;
-};
-
-export type LavalinkPlayer = {
+export interface LavalinkPlayer {
     guildId: string;
     track: Track | null;
     volume: number;
@@ -110,28 +129,28 @@ export type LavalinkPlayer = {
     state: LavalinkPlayerState;
     voice: LavalinkPlayerVoiceState;
     filters: FilterOptions;
-};
+}
 
-export type LavalinkPlayerState = {
+export interface LavalinkPlayerState {
     time: number;
     position: number;
     connected: boolean;
     ping: number;
-};
+}
 
-export type LavalinkPlayerVoiceState = {
+export interface LavalinkPlayerVoiceState {
     token: string;
     endpoint: string;
     sessionId: string;
-};
+}
 
-export type UpdatePlayerInfo = {
+export interface UpdatePlayerInfo {
     guildId: string;
     playerOptions: UpdatePlayerOptions;
     noReplace?: boolean;
-};
+}
 
-export type UpdatePlayerOptions = {
+export interface UpdatePlayerOptions {
     track?: { encoded?: string | null };
     position?: number;
     endTime?: number;
@@ -139,14 +158,14 @@ export type UpdatePlayerOptions = {
     paused?: boolean;
     filters?: FilterOptions;
     voice?: LavalinkPlayerVoiceState;
-};
+}
 
-export type SessionInfo = {
+interface SessionInfo {
     resuming: boolean;
     timeout: number;
-};
+}
 
-type FetchOptions = {
+interface FetchOptions {
     endpoint: string;
     options: {
         [key: string]: unknown;
@@ -155,14 +174,14 @@ type FetchOptions = {
         method?: string;
         body?: Record<string, unknown> | string[];
     };
-};
+}
 
-type FinalFetchOptions = {
+interface FinalFetchOptions {
     method: string;
     headers: Record<string, string>;
     signal: AbortSignal;
     body?: string;
-};
+}
 
 /**
  * Wrapper around for the Lavalink REST API.
@@ -257,7 +276,6 @@ export class Rest {
      * @internal
      */
     protected get sessionId(): string {
-        // eslint-disable-next-line typescript/no-non-null-assertion
         return this.node.sessionId!;
     }
 

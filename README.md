@@ -46,49 +46,44 @@ import { Client } from "discord.js";
 import { Esbatu } from "./Esbatu.js";
 
 const client = new Client({
-    intents: [
-        "Guilds",
-        "GuildMembers",
-        "GuildVoiceStates",
-        "GuildMessages"
-    ]
+    intents: ["Guilds", "GuildMembers", "GuildVoiceStates", "GuildMessages"]
 });
 
 client.esbatu = new Esbatu(client, {
-    nodes: [{
-        name: "default",
-        url: "localhost:2333",
-        authorization: "youshallnotpass"
-    }]
+    nodes: [
+        {
+            name: "default",
+            url: "localhost:2333",
+            authorization: "youshallnotpass"
+        }
+    ]
 });
 
 client.esbatu.on("error", (_, error) => console.error(error));
 client.on("raw", packet => client.esbatu.updateInstance(packet));
-client.on("ready"
-    async () => {
-        client.esbatu.id = client.user.id;
+client.on("ready", async () => {
+    client.esbatu.id = client.user.id;
 
-        for (const node of client.esbatu.options.nodes)
-            client.esbatu.addNode(node).catch(error => client.esbatu.emit("error", node.name, error));
+    for (const node of client.esbatu.options.nodes)
+        client.esbatu.addNode(node).catch(error => client.esbatu.emit("error", node.name, error));
 
-        const node = client.esbatu.idealNode;
-        const player = await node.joinVoiceChannel({
-            guildId: "972407605295198258",
-            channelId: "972421158664298506",
-            shardId: 0
-        });
+    const node = client.esbatu.idealNode;
+    const player = await node.joinVoiceChannel({
+        guildId: "972407605295198258",
+        channelId: "972421158664298506",
+        shardId: 0
+    });
 
-        const resultTrack = await player.node.rest.resolve("https://youtu.be/caryNKvasJI");
+    const resultTrack = await player.node.rest.resolve("https://youtu.be/caryNKvasJI");
 
-        await player.playTrack({
-            track: resultTrack.data.encoded
-        });
+    await player.playTrack({
+        track: resultTrack.data.encoded
+    });
 
-        setTimeout(async () => {
-            await client.esbatu.leaveVoiceChannel(player.guildId);
-        }, 60_000);
-    }
-);
+    setTimeout(async () => {
+        await client.esbatu.leaveVoiceChannel(player.guildId);
+    }, 60_000);
+});
 
 client.login("token");
 ```
