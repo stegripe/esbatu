@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1](https://github.com/stegripe/esbatu/compare/1.0.0...1.0.1) - (2024-07-22)
+
+### Bug Fixes
+* types issue from eslint ([4339a5c](https://github.com/stegripe/esbatu/commit/4339a5c7268050b350423a2ad20a394c5f7ad0dd))
+
 ## 1.0.0 - (2024-07-20)
 
 ### Features
