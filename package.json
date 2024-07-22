@@ -42,7 +42,7 @@
         "node": ">=18.x"
     },
     "dependencies": {
-        "undici": "^6.19.2",
+        "undici": "^6.19.4",
         "ws": "^8.18.0"
     },
     "devDependencies": {
@@ -50,14 +50,14 @@
         "@types/node": "^20.14.11",
         "@types/ws": "^8.5.11",
         "cross-env": "^7.0.3",
-        "discord-api-types": "^0.37.92",
+        "discord-api-types": "^0.37.93",
         "eslint": "^9.7.0",
         "eslint-formatter-pretty": "^6.0.1",
         "eslint-plugin-prettier": "^5.2.1",
         "lavalink-api-types": "^2.0.2",
         "prettier": "^3.3.3",
-        "tsup": "^8.2.1",
-        "typedoc": "^0.26.4",
+        "tsup": "^8.2.2",
+        "typedoc": "^0.26.5",
         "typescript": "^5.5.3"
     },
     "peerDependencies": {
