@@ -56,7 +56,7 @@
         "eslint-plugin-prettier": "^5.2.1",
         "lavalink-api-types": "^2.0.2",
         "prettier": "^3.3.3",
-        "tsup": "^8.2.2",
+        "tsup": "^8.2.3",
         "typedoc": "^0.26.5",
         "typescript": "^5.5.4"
     },
