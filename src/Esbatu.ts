@@ -1,10 +1,6 @@
-/* eslint-disable tsdoc/syntax */
+/* eslint-disable typescript/no-shadow, tsdoc/syntax */
 import { EventEmitter } from "node:events";
-import type {
-    GatewayVoiceServerUpdateDispatch,
-    GatewayVoiceStateUpdate,
-    GatewayVoiceStateUpdateDispatch
-} from "discord-api-types/v10";
+import type { GatewayDispatchPayload, GatewayVoiceStateUpdate } from "discord-api-types/v10";
 import { GatewayDispatchEvents } from "discord-api-types/v10";
 import type { Redis } from "ioredis";
 import { name as packageName, version as packageVersion } from "../package.json";
@@ -249,17 +245,13 @@ export abstract class Esbatu extends EventEmitter {
      *
      * @param packet Packet instance from Discord Gateway.
      */
-    public updateInstance(packet: GatewayVoiceServerUpdateDispatch | GatewayVoiceStateUpdateDispatch): void {
-        const guildId = packet.d.guild_id ?? "";
-        const connection = this.connections.get(guildId);
-        const AllowedPackets: GatewayDispatchEvents[] = [
-            GatewayDispatchEvents.VoiceStateUpdate,
-            GatewayDispatchEvents.VoiceServerUpdate
-        ];
-
-        if (!connection || !AllowedPackets.includes(packet.t)) return undefined;
-
+    public updateInstance(packet: GatewayDispatchPayload): void {
         if (packet.t === GatewayDispatchEvents.VoiceServerUpdate) {
+            const guildId = packet.d.guild_id;
+            const connection = this.connections.get(guildId);
+
+            if (!connection) return undefined;
+
             if (packet.d.endpoint === null) {
                 connection.emit("connectionUpdate", VoiceState.SessionEndpointMissing);
 
@@ -291,6 +283,13 @@ export abstract class Esbatu extends EventEmitter {
 
             return undefined;
         }
+
+        if (packet.t !== GatewayDispatchEvents.VoiceStateUpdate) return undefined;
+
+        const guildId = packet.d.guild_id ?? "";
+        const connection = this.connections.get(guildId);
+
+        if (!connection) return undefined;
 
         const userId = packet.d.user_id;
 
