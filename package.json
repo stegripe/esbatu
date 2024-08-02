@@ -49,14 +49,14 @@
     },
     "devDependencies": {
         "@stegripe/eslint-config": "^1.0.1",
-        "@types/node": "^20.14.13",
+        "@types/node": "^20.14.14",
         "@types/ws": "^8.5.12",
         "cross-env": "^7.0.3",
         "eslint": "^9.8.0",
         "eslint-formatter-pretty": "^6.0.1",
         "eslint-plugin-prettier": "^5.2.1",
         "prettier": "^3.3.3",
-        "tsup": "^8.2.3",
+        "tsup": "^8.2.4",
         "typedoc": "^0.26.5",
         "typescript": "^5.5.4"
     },
