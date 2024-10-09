@@ -58,7 +58,7 @@
         "prettier": "^3.3.3",
         "tsup": "^8.3.0",
         "typedoc": "^0.26.8",
-        "typescript": "^5.6.2"
+        "typescript": "^5.6.3"
     },
     "peerDependencies": {
         "ioredis": ">=5.4.1"
