@@ -42,9 +42,9 @@
         "node": ">=18.x"
     },
     "dependencies": {
-        "discord-api-types": "^0.37.101",
+        "discord-api-types": "^0.37.102",
         "lavalink-api-types": "^2.0.2",
-        "undici": "^6.20.0",
+        "undici": "^6.20.1",
         "ws": "^8.18.0"
     },
     "devDependencies": {
@@ -57,7 +57,7 @@
         "eslint-plugin-prettier": "^5.2.1",
         "prettier": "^3.3.3",
         "tsup": "^8.3.0",
-        "typedoc": "^0.26.8",
+        "typedoc": "^0.26.10",
         "typescript": "^5.6.3"
     },
     "peerDependencies": {

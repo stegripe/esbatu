@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       discord-api-types:
-        specifier: ^0.37.101
-        version: 0.37.101
+        specifier: ^0.37.102
+        version: 0.37.102
       ioredis:
         specifier: '>=5.4.1'
         version: 5.4.1
@@ -18,8 +18,8 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       undici:
-        specifier: ^6.20.0
-        version: 6.20.0
+        specifier: ^6.20.1
+        version: 6.20.1
       ws:
         specifier: ^8.18.0
         version: 8.18.0
@@ -52,8 +52,8 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0(typescript@5.6.3)(yaml@2.5.1)
       typedoc:
-        specifier: ^0.26.8
-        version: 0.26.8(typescript@5.6.3)
+        specifier: ^0.26.10
+        version: 0.26.10(typescript@5.6.3)
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -840,8 +840,8 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
-  discord-api-types@0.37.101:
-    resolution: {integrity: sha512-2wizd94t7G3A8U5Phr3AiuL4gSvhqistDwWnlk1VLTit8BI1jWUncFqFQNdPbHqS3661+Nx/iEyIwtVjPuBP3w==}
+  discord-api-types@0.37.102:
+    resolution: {integrity: sha512-5+m5twqG8n77rLhKuh2c/971UWszEL/c3KbdvVLUBTPXuS8PbYC/7W7NYhwP02qowjj6CHoKYZbD0ppOUCsT6g==}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -2055,8 +2055,8 @@ packages:
     resolution: {integrity: sha512-/OxDN6OtAk5KBpGb28T+HZc2M+ADtvRxXrKKbUwtsLgdoxgX13hyy7ek6bFRl5+aBs2yZzB0c4CnQfAtVypW/g==}
     engines: {node: '>= 0.4'}
 
-  typedoc@0.26.8:
-    resolution: {integrity: sha512-QBF0BMbnNeUc6U7pRHY7Jb8pjhmiNWZNQT8LU6uk9qP9t3goP9bJptdlNqMC0wBB2w9sQrxjZt835bpRSSq1LA==}
+  typedoc@0.26.10:
+    resolution: {integrity: sha512-xLmVKJ8S21t+JeuQLNueebEuTVphx6IrP06CdV7+0WVflUSW3SPmR+h1fnWVdAR/FQePEgsSWCUHXqKKjzuUAw==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
@@ -2086,8 +2086,8 @@ packages:
   undici-types@6.19.6:
     resolution: {integrity: sha512-e/vggGopEfTKSvj4ihnOLTsqhrKRN3LeO6qSN/GxohhuRv8qH9bNQ4B8W7e/vFL+0XTnmHPB4/kegunZGA4Org==}
 
-  undici@6.20.0:
-    resolution: {integrity: sha512-AITZfPuxubm31Sx0vr8bteSalEbs9wQb/BOBi9FPlD9Qpd6HxZ4Q0+hI742jBhkPb4RT2v5MQzaW5VhRVyj+9A==}
+  undici@6.20.1:
+    resolution: {integrity: sha512-AjQF1QsmqfJys+LXfGTNum+qw4S88CojRInG/6t31W/1fk6G59s92bnAvGz5Cmur+kQv2SURXEvvudLmbrE8QA==}
     engines: {node: '>=18.17'}
 
   unist-util-is@6.0.0:
@@ -2906,7 +2906,7 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
-  discord-api-types@0.37.101: {}
+  discord-api-types@0.37.102: {}
 
   doctrine@2.1.0:
     dependencies:
@@ -4287,7 +4287,7 @@ snapshots:
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
 
-  typedoc@0.26.8(typescript@5.6.3):
+  typedoc@0.26.10(typescript@5.6.3):
     dependencies:
       lunr: 2.3.9
       markdown-it: 14.1.0
@@ -4320,7 +4320,7 @@ snapshots:
 
   undici-types@6.19.6: {}
 
-  undici@6.20.0: {}
+  undici@6.20.1: {}
 
   unist-util-is@6.0.0:
     dependencies:
