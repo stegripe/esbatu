@@ -42,22 +42,22 @@
         "node": ">=18.x"
     },
     "dependencies": {
-        "discord-api-types": "^0.37.104",
+        "discord-api-types": "^0.37.111",
         "lavalink-api-types": "^2.0.2",
         "undici": "^6.21.0",
         "ws": "^8.18.0"
     },
     "devDependencies": {
         "@stegripe/eslint-config": "^1.0.1",
-        "@types/node": "^22.9.0",
+        "@types/node": "^22.10.2",
         "@types/ws": "^8.5.13",
         "cross-env": "^7.0.3",
         "eslint": "^9.14.0",
         "eslint-formatter-pretty": "^6.0.1",
         "eslint-plugin-prettier": "^5.2.1",
-        "prettier": "^3.3.3",
+        "prettier": "^3.4.2",
         "tsup": "^8.3.5",
-        "typedoc": "^0.26.11",
+        "typedoc": "^0.27.5",
         "typescript": "^5.6.3"
     },
     "peerDependencies": {
