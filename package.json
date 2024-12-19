@@ -42,7 +42,7 @@
         "node": ">=18.x"
     },
     "dependencies": {
-        "discord-api-types": "^0.37.111",
+        "discord-api-types": "^0.37.112",
         "lavalink-api-types": "^2.0.2",
         "undici": "^7.2.0",
         "ws": "^8.18.0"
