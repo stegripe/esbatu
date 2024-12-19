@@ -48,7 +48,7 @@
         "ws": "^8.18.0"
     },
     "devDependencies": {
-        "@stegripe/eslint-config": "^1.0.1",
+        "@stegripe/eslint-config": "^2.2.2",
         "@types/node": "^22.10.2",
         "@types/ws": "^8.5.13",
         "cross-env": "^7.0.3",
