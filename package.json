@@ -44,7 +44,7 @@
     "dependencies": {
         "discord-api-types": "^0.37.111",
         "lavalink-api-types": "^2.0.2",
-        "undici": "^6.21.0",
+        "undici": "^7.2.0",
         "ws": "^8.18.0"
     },
     "devDependencies": {
